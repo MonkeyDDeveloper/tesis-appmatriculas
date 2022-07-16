@@ -1,0 +1,239 @@
+include ../partials/head.pug
+body
+  include ../partials/navegacion_estudiantes.pug
+  mixin alert(type, message)
+    .alert.alert-dismissible.fade.show(role="alert", class=type?'alert-success':'alert-danger')
+      =message
+      button.btn-close(type="button" data-bs-dismiss="alert" aria-label="Close")
+  if (success)
+    +alert(true, success)
+  input#ci(type="hidden", value=identifier)
+  if (student.enrollment.length>=1)
+    - let ids = student.enrollment.map( v => {return v._id})
+    input#enrolls_ids(type='hidden' value=JSON.stringify(ids))
+  .container-lg.my-5
+    .row.justify-content-center
+      .col.overflow-auto
+        table.table.table-striped.table-hover.rounded
+          caption#caption_messagge
+            =student.enrollment.length>=1?'Matriculas del estudiante':'No hay matriculas publicadas'
+          thead.text-white(style="background-color:rgb(40, 55, 71)")
+          tr
+            th(scope='col') Tipo
+            th(scope='col') Carrera
+            th(scope='col') Periodo
+            th(scope='col') Estado
+            th(scope='col') Acción
+          tbody#row_enrollment_container
+            -if (student.enrollment.length>=1)
+              each enrollment in student.enrollment
+                tr.features_container(id=`${enrollment._id}CONTAINER`)
+                  td.type(style="vertical-align:middle")=enrollment.enrollment_features.type
+                  td.career(style="vertical-align:middle")=enrollment.enrollment_features.career
+                  td.period(style="vertical-align:middle")=`${enrollment.enrollment_features.period} ${enrollment.enrollment_features.year}`
+                  td.status(style="vertical-align:middle")=enrollment.status=='undefined'?'INDEFINIDA':enrollment.status=='true'?enrollment.qualified[0]==true?'FINALIZADO':'ACEPTADA':'RECHAZADA'
+                  td.action_parent
+                    button.btn.btn-success.ms-1.mb-1.watch(type="button" data-bs-toggle="modal" data-bs-target=`#staticBackdrop${enrollment._id}`) Ver
+                    -if (enrollment.status=='undefined')
+                      button.btn.btn-danger.ms-1.mb-1.delete(style="visibility:hidden" id=enrollment._id) Eliminar
+  -if (student.enrollment.length>=1)
+    each enrollment in student.enrollment
+      - let {economic_aid,differentiated_pension,work_day,student_occupation,student_income,development_bonus,type_scholarship,scholarship_reason,scholarship_amount,tariff_coverage,maintenance_coverage,scholarship_funding,educative_credit,members_family,emergency_contact,no_emergency_contact,higher_degree,title_name} = enrollment.information_per_enroll
+      .modal.fade.modal_container(aria-modal='true' id=`staticBackdrop${enrollment._id}`, data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true")
+        .modal-dialog.modal-dialog-scrollable.modal-xl
+          .modal-content
+            .modal-header
+              h5.modal-title Datos de la matrícula
+              button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+            .modal-body
+              .container-fluid
+                .row.justify-content-start
+                  .col-12.last_modify
+                    - if (enrollment.last_modify)
+                      strong Revisado por: 
+                      =enrollment.last_modify
+                  .col-12.message
+                    - if (enrollment.message)
+                      =enrollment.message
+                  .col-12.qualified
+                    - if (enrollment.qualified[0])
+                      strong Asignaturas calificadas por: 
+                      =enrollment.qualified[1][0]
+                .row.justify-content-around.my-4
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.differentiated_pension.form-select.my-2(disabled)
+                        option(value='') Ninguno
+                        option(value='true' selected=differentiated_pension=='true'?true:false) Si
+                        option(value='false' selected=differentiated_pension=='false'?true:false) No
+                      label(for='floatingSelect1') <strong>¿Recibe pensión diferenciada?</strong>
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.work_day.form-select.my-2(disabled)
+                        option(value='') Ninguno
+                        option(value='MATUTINA' selected=work_day=='MATUTINA'?true:false) Matutina
+                        option(value='NOCTURNA' selected=work_day=='NOCTURNA'?true:false) Nocturna
+                      label(for='floatingSelect10') <strong>Sección del estudiante</strong>
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.student_occupation.form-select.my-2(disabled)
+                        option(value='') Ninguno
+                        option(value='SOLO ESTUDIA' selected=student_occupation=='SOLO ESTUDIA'?true:false) Solo estudia
+                        option(value='TRABAJA Y ESTUDIA' selected=student_occupation=='TRABAJA Y ESTUDIA'?true:false) Trabaja y estudia
+                      label(for='floatingSelect2') <strong>Ocupación del estudiante</strong>
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.student_income.form-select.my-2(disabled)
+                        option(value='NO APLICA' selected=student_income=='NO APLICA'?true:false) Ninguno
+                        option(value='FINANCIAR SUS ESTUDIOS' selected=student_income=='FINANCIAR SUS ESTUDIOS'?true:false) Financiar sus estudios
+                        option(value='GASTOS PERSONALES' selected=student_income=='GASTOS PERSONALES'?true:false) Gastos personales
+                        option(value='MANTENER SU HOGAR' selected=student_income=='MANTENER SU HOGAR'?true:false) Mantener su hogar
+                      label(for='floatingSelect3') <strong>¿Para qué usa sus ingresos?</strong>
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.development_bonus.form-select.my-2(disabled)
+                        option(value='') Ninguno
+                        option(value='true' selected=development_bonus=='true'?true:false) Si
+                        option(value='false' selected=development_bonus=='false'?true:false) No
+                      label(for='floatingSelect4') <strong>¿Posee bono de desarrollo?</strong>
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.type_scholarship.form-select.my-2(disabled)
+                        option(value='NO APLICA' selected=type_scholarship=='NO APLICA'?true:false) No aplica
+                        option(value='TOTAL' selected=type_scholarship=='TOTAL'?true:false) Total
+                        option(value='PARCIAL' selected=type_scholarship=='PARCIAL'?true:false) Parcial
+                      label(for='floatingSelect5') <strong>Tipo de beca</strong>
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.scholarship_reason.form-select.my-2(disabled)
+                        option(value='NO APLICA' selected=scholarship_reason=='NO APLICA'?true:false) Ninguna
+                        option(value='SOCIOECONOMICA' selected=scholarship_reason=='SOCIOECONOMICA'?true:false) Socioeconómica
+                        option(value='ACADEMICA' selected=scholarship_reason=='ACADEMICA'?true:false) Académica
+                      label(for='floatingSelect6') <strong>Razon de beca</strong>
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      input.scholarship_amount.form-control.my-2(type="number" value=type_scholarship!='NO APLICA'?scholarship_amount:'' disabled)
+                      label(for="floatingInput1") Monto de beca en dólares
+                  .col-sm-12.col-lg-6.text-center
+                    input.tariff_coverage.form-range.mt-2.mb-0(type="range" value=type_scholarship!='NO APLICA'?tariff_coverage:'' disabled)
+                    label.form-label.m-0(for="tariff_coverage") 
+                      - if(type_scholarship!='NO APLICA')
+                        span.tariff_coverage_area.m-0 
+                          | Cobertura arancel:
+                          =` ${tariff_coverage}%`
+                      - else
+                        span.tariff_coverage_area.m-0 Cobertura arancel: NO APLICA
+                  .col-sm-12.col-lg-6.text-center
+                    input.maintenance_coverage.form-range.mt-2.mb-0(type="range" value=type_scholarship!='NO APLICA'?maintenance_coverage:'' disabled)
+                    label.form-label.m-0(for="maintenance_coverage") 
+                      - if(type_scholarship!='NO APLICA')
+                        span.tariff_coverage_area.m-0 
+                          | Cobertura manutención:
+                          =` ${maintenance_coverage}%`
+                      - else
+                        span.tariff_coverage_area.m-0 Cobertura manutención: NO APLICA
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.scholarship_funding.form-select.my-2(disabled)
+                        option(value='NO APLICA' selected=scholarship_funding=='NO APLICA'?true:false) Ninguna
+                        option(value='TRANSFERENCIA DEL ESTADO' selected=scholarship_funding=='TRANSFERENCIA DEL ESTADO'?true:false) Transferencia del estado
+                        option(value='OTRAS' selected=scholarship_funding=='OTRAS'?true:false) Otras
+                      label(for='floatingSelect7') <strong>Financiamiento de la beca</strong>
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.educative_credit.form-select.my-2(disabled)
+                        option(value='') Ninguno
+                        option(value='true' selected=educative_credit=='true'?true:false) Si
+                        option(value='false' selected=educative_credit=='false'?true:false) No
+                      label(for='floatingSelect8') <strong>¿Tiene crédito educativo?</strong>
+                  .col-sm-12.col-lg-6
+                      .form-floating
+                        input.economic_aid.form-control.my-2(type="text" value=(economic_aid=="0" || economic_aid=="NO APLICA")?"NO APLICA":economic_aid disabled)
+                        label(for="floatingInput6") Monto de ayuda económica
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      input.members_family.form-control.my-2(type="number" value=members_family disabled)
+                      label(for="floatingInput2") Cantidad de miembros en el hogar
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      input.emergency_contact.form-control.my-2(type="text" value=emergency_contact disabled)
+                      label(for="floatingInput3") Contacto de emergencia (NOMBRE Y APELLIDO)
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      input.no_emergency_contact.form-control.my-2(type="text" value=no_emergency_contact disabled)
+                      label(for="floatingInput4") Número celular de contacto de emergencia
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      select.higher_degree.form-select.my-2(disabled)
+                        option(value='') Ninguno
+                        option(value='true' selected=higher_degree=='true'?true:false) Si
+                        option(value='false' selected=higher_degree=='false'?true:false) No
+                      label(for='floatingSelect9') <strong>¿Posee un título de educación superior?</strong>
+                  .col-sm-12.col-lg-6
+                    .form-floating
+                      input#floatingInput5.title_name.form-control.my-2(type="text" value=title_name disabled)
+                      label(for="floatingInput5") Especifique el titulo (Bachillerato o superior)
+                  .col-sm-12.col-lg-6
+                .row.mt-3
+                 .col.overflow-auto
+                  table.table.table-striped.table-hover.rounded
+                    thead.text-white(style="background-color:rgb(40, 55, 71)")
+                    tr
+                      th(scope='col') Semestre
+                      th(scope='col') Nombre
+                      th(scope='col') #
+                      th(scope='col') Estado
+                    tbody.modal_signatures_area
+                      each subject in enrollment.request_subjects
+                        - let {no,level,name,status} = subject
+                        tr.no_container(id=`${no}CONTAINER`)
+                          th.level(style="vertical-align:middle").text-center=level
+                          td.name(style="vertical-align:middle").text-center=name
+                          td.enrollment(style="vertical-align:middle")=subject.enrollment
+                          td.status(style="vertical-align:middle").text-center
+                            - if(enrollment.status!='false')
+                              - if(enrollment.qualified[0])
+                                - if(status)
+                                  | APROBADO
+                                - else
+                                  | REPROBADO
+                              - else 
+                                | INDEFINIDO
+                            - else
+                              | ------
+                .row.mt-3.justify-content-end
+                  .col-auto
+                    form.modal_form
+                      input.period(type="hidden" value=enrollment.enrollment_features.period name="period")
+                      input.year(type="hidden" value=enrollment.enrollment_features.year name="year")
+                      input.student(type="hidden" value=enrollment.student[0] name="student")
+                      button.btn.btn-primary(type="submit")
+                        | Descargar documentacion relacionada a esta matrícula.
+                -if(enrollment.status == 'true' && enrollment.qualified[0] == false)
+                 hr
+                 .row.mt-3
+                  .col
+                    form.upload_new_files.needs-validation(novalidate)
+                      .row
+                        .col-12.col-md-12.col-lg-6.mt-2
+                          input.enroll_id(name='enrollId' type='hidden', value=enrollment._id, required)
+                          label(for="new_file_for_enrollment") 
+                            strong
+                              | Adjuntar nueva documentación a la matrícula
+                          input.mt-2.form-control(name='newFile' type='file' id='new_file_for_enrollment', required)
+                        .col-12
+                          .message_area_modal.mt-2
+                        .col.mt-2
+                          .row.align-items-center(style='height:100%')
+                            .col
+                              button.btn.btn-success(type='submit')
+                                | Subir nueva documentación 
+                                <i style='color:white;' class="fa fa-upload" aria-hidden="true"></i>
+  #message_area
+  if (student.enrollment.length<=0)
+    +alert(false, 'No se ha encontrado ninguna matrícula activa o inactiva relacionada a esta cuenta.')
+  if (message_error)
+    +alert(false, message_error)
+  include ../partials/footer.pug
+  script(src="/socket.io/socket.io.js")
+  script(src="/js/estudiantes_mis_matriculas.js") 

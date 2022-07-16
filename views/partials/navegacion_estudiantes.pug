@@ -1,0 +1,70 @@
+.container-fluid.p-0
+  nav.navbar.navbar-light.bg-light
+      .row.justify-content-between(style="width:100%")
+          .col-auto
+            a.navbar-brand
+              button.btn.btn-light.border.mx-2(type="button", title='Menú' data-bs-toggle="offcanvas", data-bs-target="#offcanvasWithBackdrop", aria-controls="offcanvasWithBackdrop")
+                i.fa.fa-bars.fa-2x(aria-hidden="true", style="color: #2E4053")
+              img.mr-2(src="../images/icono_ispedib.ico" title='ISPEDIB LOGO')
+              |       Matriculaciones ISPIB MBR
+          .col-auto
+            a(href="/logout")  
+              button.btn.btn-light.border(type="button", data-bs-toggle="tooltip", data-bs-placement="left",  title="Cerrar sesión", style="background-color: #FFC300;")
+                i.fa.fa-sign-out.fa-2x(aria-hidden="true", style="color: #2E4053")
+.offcanvas.offcanvas-start#offcanvasWithBackdrop(tabindex="-1", aria-labelledby="offcanvasWithBackdropLabel")
+  .offcanvas-header.border-bottom
+    i.fa.fa-user.fa-2x(style="color: #2E4053")
+    h5.offcanvas-title#offcanvasWithBackdropLabel(style="color: #2E4053")=name
+    button.btn-close.text-reset(type="button", data-bs-dismiss="offcanvas", aria-label="Close")
+  .offcanvas-body
+    .row.row-cols-1
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/student/index", role="button")
+           h6(style="color: #2E4053") Inicio
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/student/titulacion", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Matricularse en titulación
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-graduation-cap(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/student/mis_matriculas", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Mis matrículas
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-address-card(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/student/mis_matriculas_titulacion", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Mis periodos de titulación
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-address-card-o(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/student/subir_documentacion", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Subir documentación
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-folder-open(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/student/editar_informacion", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Actualizar información
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-pencil-square-o(style="color: #2E4053")

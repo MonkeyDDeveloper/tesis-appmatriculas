@@ -1,0 +1,46 @@
+{
+  "name": "app-matriculas",
+  "version": "0.0.1",
+  "description": "aplicacion destinada al sistema de matriculacion del instituto de educacion superior martha bucaram de roldos",
+  "main": " ",
+  "scripts": {
+    "start": "node server.js",
+    "deve" : "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": " "
+  },
+  "keywords": [
+    "app",
+    "matriculas",
+    "ispedib",
+    "tesis"
+  ],
+  "author": "Juan Fray",
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "^5.3.0",
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "cors": "^2.8.5",
+    "del": "^6.0.0",
+    "dotenv": "^14.3.2",
+    "exceljs": "^4.3.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "formidable": "^1.2.2",
+    "fs-extra": "^10.0.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.13.5",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pug": "^3.0.2",
+    "serve-favicon": "^2.5.0",
+    "socket.io": "^4.2.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.12"
+  }
+}

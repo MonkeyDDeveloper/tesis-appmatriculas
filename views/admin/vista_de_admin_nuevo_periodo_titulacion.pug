@@ -1,0 +1,96 @@
+include ../partials/head.pug
+body
+ include ../partials/navegacion_admin.pug
+ mixin alert(type, message)
+      .alert.alert-dismissible.fade.show(role="alert" class=type?'alert-success':'alert-danger')
+          =message
+          button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+ if (success)
+  +alert(true, success)
+ if (message)
+  +alert(true, message)
+ .container-fluid.my-4
+      .row.justify-content-around.my-4
+          .col-sm-12.col-md-6.col-lg-4
+              .card.mb-2
+                form.needs-validation(novalidate)#form_enrollment
+                  input#admin_name(type="hidden", value=admin_name)
+                  input#admin_identifier(type="hidden", value=admin_identifier)
+                  .card-header.text-center
+                      h5(style="color: #2E4053") Características de la matrícula
+                  .card-body
+                      .form-floating.my-2
+                          input#floatingInput1.form-control(type="text", name="title", placeholder="Titulo de la matrícula" , required)
+                          label(for="title") Titulo de la matrícula
+                      .form-floating.my-2
+                          select#floatingSelect1.form-select(name="type", title='Seleccione el tipo de matrícula.' required)
+                              option(value="") Ninguno
+                              option(value="0") Primer periodo destinado a la titulación
+                              option(value="1") Primera prorroga
+                              option(value="2") Segunda prorroga
+                          label(for="type") Tipo de matrícula
+                      .form-floating.my-2
+                          input.form-control(type="date", name="start_date", min='2014-01-01', max=`${new Date().getFullYear() + 5}-12-31`, placeholder="Fecha de inicio", required)
+                          label(for="start_date") Fecha de inicio de semestre
+                      .form-floating.my-2
+                          input#floatingInput2.form-control(type="number", name="duration", placeholder="Duración del semestre", min=16, max=19, required)
+                          label(for="duration") Duración
+                      .form-floating.my-2
+                          select#floatingSelect2.form-select(name="career", title='Seleccione la carrera de la matrícula.' required)
+                              option(value="") Ninguno
+                              option(value='AUTOMATIZACION E INSTRUMENTACION') Automatización e Instrumentación
+                              option(value='MONITOREO AMBIENTAL') Monitoreo Ambiental
+                              option(value='DESARROLLO INFANTIL INTEGRAL') Desarrollo Infantil Integral
+                              option(value='MECATRONICA') Mecatrónica
+                              option(value='MECANICA INDUSTRIAL') Mecánica Industrial
+                              option(value='SEGURIDAD Y PREVENCION DE RIESGOS LABORALES') Seguridad Y Prevención de Riesgos Laborales
+                              option(value='SOLDADURA') Soldadura
+                          label(for="career") Carrera
+                      .form-floating.my-2
+                        .my-1
+                          strong(style="color: #2E4053") Período
+                        .input-group
+                          select#floatingSelect3.form-select(name="period", title='Seleccione el periodo.' required)
+                             option(value="") Ninguno
+                             option(value='IPA') IPA
+                             option(value='IIPA') IIPA
+                          input#floatingInput3.form-control(type="number", name="year", min=2014, required)
+                      .form-floating
+                        textarea.form-control#floatingTextarea2(form="form_enrollment", name="message", maxlength="140", placeholder="Inserte un comentario de referencia respecto a la matricula que será mostrado a los postulantes.", style="height: 140px")
+                        label(for="floatingTextarea2") Datos adicionales (Max 100 caracteres)
+                  .card-footer
+                    button#btn_submit.btn.btn-primary.form-control(type="submit")
+                        h6.text-white.m-0 Publicar periodo
+          .col-sm-12.col-md-12.col-lg-8.overflow-auto
+              table.table.table-striped.table-hover.rounded
+                  caption#caption_messagge
+                   - if (title_periods.length <= 0)
+                        | No hay periodos publicados
+                   - else 
+                        | Periodos publicados
+                  thead.text-white(style="background-color:rgb(40, 55, 71)")
+                  tr
+                    th(scope='col') Titulo
+                    th(scope='col') Tipo
+                    th(scope='col') Carrera
+                    th(scope='col') Publicado por
+                    th(scope='col') Periodo
+                    th(scope='col') Fecha de inicio
+                    th(scope='col') Acción
+                  tbody#table_body
+                    - if (title_periods.length > 0)
+                      each title_period in title_periods
+                        - let {_id,title,type,career,published_by,period,year,start_date} = title_period
+                        tr.list_container(id=`${_id}CONTAINER`)
+                          td.title(style="vertical-align:middle")=title
+                          td.type(style="vertical-align:middle")=type[1]
+                          td.career(style="vertical-align:middle").text-center=career
+                          td.by(style="vertical-align:middle").text-center=published_by[0]
+                          td.period(style="vertical-align:middle").text-center=`${period} ${year}`
+                          td.start_date(style="vertical-align:middle").text-center=start_date
+                          td
+                            button.btn.btn-danger.ms-1.mb-1.delete_button(id=_id) Eliminar publicación
+ #message_area
+ include ../partials/footer.pug
+ script(src="/socket.io/socket.io.js")
+ script(src="/js/admin_new_title_process.js")

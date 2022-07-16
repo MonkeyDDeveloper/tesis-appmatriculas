@@ -1,0 +1,165 @@
+include ../partials/head.pug
+body
+include ../partials/navegacion_admin.pug
+mixin invalidMessage(message)
+    .invalid-feedback
+          =message
+if (success)
+  .alert.alert-success.alert-dismissible.fade.show(role="alert")
+    strong=success
+    button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+- if (found == false && students.length == 0)
+    .alert.alert-warning.alert-dismissible.fade.show(role="alert")
+      strong='No se ha encontrado ningún estudiante en la base de datos con este número de identificación'
+      button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+h1.text-center.bg-light.p-2(style="color: #2E4053") Actualizar estudiante
+input#admin_name(type="hidden", name="admin_name", value=admin_name)
+input#admin_identifier(type="hidden", name="admin_identifier", value=admin_identifier)
+.container-fluid.mb-4
+  form#form_filter
+   .row.justify-content-end.rounded.align-items-center.py-1(style="background-color:rgb(40, 55, 71)")
+    .col-12.col-sm-12.col-md-5.col-lg-4.my-1
+     .form-floating
+        input.form-control(type='text' placeholder='Filtrar por numero de identificación', name="ci_filter")
+        label Filtrar por número de identificación
+    .col-12.col-sm-12.col-md-2.col-lg-1.my-1
+        button.form-control.btn.btn-primary(type="submit") Filtrar
+.container-lg
+  .row.my-3.students_container
+      .row.my-4.justify-content-end
+        .col-12.overflow-auto
+          table.table.table-striped.table-hover.rounded
+            caption.caption_message
+              - if (students.length > 0) 
+                | Todos los alumnos
+            thead.text-white(style="background-color:rgb(40, 55, 71)")
+              tr
+                th(scope='col') Nombre
+                th(scope='col') ID
+                th(scope='col') Carrera
+                th(scope='col') Nivel
+                th(scope='col') Acción
+            tbody.m_s_a(id='m_s_a')
+             if (students)
+               each student in students
+                  tr(id=`${student._id}CONTAINER` data-career=student.career, data-no_identifier=student.no_identifier)
+                      td.text-start(style='vertical-align:middle;color:rgb(40, 55, 71)')=student.first_lastname + ' ' + student.first_name
+                      td.text-start(style='vertical-align:middle;color:rgb(40, 55, 71)')=student.no_identifier
+                      td.text-start(style='vertical-align:middle;color:rgb(40, 55, 71)')=student.career
+                      td.text-start(style='vertical-align:middle;color:rgb(40, 55, 71)')=student.level
+                      td(style="vertical-align:middle").text-center
+                          button.btn.btn-primary.watch(data-bs-toggle="modal" data-bs-target=`#staticBackdrop${student.no_identifier}`)
+                            | Ver
+- if(students)
+    each student in students
+        .modal.fade(id=`staticBackdrop${student.no_identifier}` data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true")
+          .modal-dialog.modal-dialog-scrollable.modal-xl
+            .modal-content
+              .modal-header
+                  h5.modal-title#staticBackdropLabel Estado del estudiante
+                  button.btn-close.close_button(id=`closeModalButton${student.no_identifier}` type="button" data-bs-dismiss="modal" aria-label="Close")
+              .modal-body
+                form.needs-validation.act_student_form(novalidate id=student._id)
+                  .row
+                      .col-12
+                        h5(style='color:rgb(40, 55, 71)') Estado de las asignaturas
+                        p De click en el elemento que desee actualizar
+                      .col-12.overflow-auto
+                          h6
+                            strong Recuerde revisar la 
+                            a(href='http://www.ispibmbr.edu.ec/carreras/') malla curricular
+                            strong  antes de actualizar las asignaturas del estudiante.
+                          table.table.table-striped.table-hover.rounded
+                            caption.caption_message Todos las asignaturas
+                            thead.text-white(style="background-color:rgb(40, 55, 71)")
+                              tr
+                                th(scope='col') Nombre
+                                th(scope='col') Semestre
+                                th(scope='col') Número
+                                th(scope='col') Ult. Rev
+                                th(scope='col') Estado
+                            tbody.m_s_a
+                              if (student.subjects.length > 0)
+                                  - let s_subjects = student.subjects.sort( (a, b) => a.no - b.no)
+                                  each subject in s_subjects
+                                    tr(id=`subject${student._id}`)
+                                      td(style="vertical-align:middle")= subject.name
+                                      td(style="vertical-align:middle")= subject.level
+                                      td(style="vertical-align:middle")
+                                        .e_sub
+                                          input.form-control(name=`e${subject.no}`, type='number', min=1, max=4, value=subject.enrollment, disabled)
+                                      td(style="vertical-align:middle")= subject.last_modify[0] != 'undefined' ? subject.last_modify[0] : 'INDEFINIDO'
+                                      td.s_sub(style="vertical-align:middle")
+                                        .form-check.form-switch
+                                            input.action.form-check-input(name=subject.no type="radio", role="switch", value='true', checked=subject.status, disabled, required)
+                                            label.form-check-label Aprobado
+                                        .form-check.form-switch
+                                            input.action.form-check-input(name=subject.no type="radio", role="switch", value='false', checked=!subject.status, disabled, required)
+                                            label.form-check-label Reprobado
+                  .row
+                      .col-12
+                        h5(style='color:rgb(40, 55, 71)') Datos del estudiante  
+                      .col-12 
+                        .form-floating.m-2
+                            select.form-select(name="modality", required)
+                              option(value='DUAL', selected=student.modality=='DUAL'?true:false) Dual
+                              option(value='PRESENCIAL', selected=student.modality=='PRESENCIAL'?true:false) Presencial
+                              option(value='SEMIPRESENCIAL', selected=student.modality=='SEMIPRESENCIAL'?true:false) Semi-presencial
+                            label(for='floatingSelect1') <strong>Modalidad</strong>  
+                        .form-floating.m-2
+                            select.form-select(name="work_day", required)
+                              option(value='', selected=student.work_day=='UNDEFINED'?true:false)
+                              option(value='MATUTINA', selected=student.work_day=='MATUTINA'?true:false) Matutina
+                              option(value='NOCTURNA', selected=student.work_day=='NOCTURNA'?true:false) Nocturna
+                            label(for='floatingSelect2') <strong>Sección</strong>
+                            +invalidMessage('Seleccione la sección del estudiante.')
+                        .form-floating.m-2
+                            select.form-select(name="gratuity", required)
+                              option(value='true', selected=student.gratuity) Si
+                              option(value='false', selected=!student.gratuity) No
+                            label(for='floatingSelect3') <strong>Mantiene gratuidad</strong>
+                        .form-floating.m-2
+                            select.form-select(name="drags", required)
+                              option(value='true', selected=student.drags) Si
+                              option(value='false', selected=!student.drags) No
+                            label(for='floatingSelect4') <strong>Arrastra</strong>
+                        .form-floating.m-2
+                            select.form-select(name="subjects_repeated", required)
+                              option(value='true', selected=student.subjects_repeated) Si
+                              option(value='false', selected=!student.subjects_repeated) No
+                            label(for='floatingSelect5') <strong>Ha repetido alguna materia</strong>
+                        .form-floating.m-2
+                            input.form-control(name="password", type='password', pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])([A-Za-z\\d$@$!%*?&]|[^ ]){8,15}", placeholder="Actualizar contraseña")
+                            label.text-muted(for='floatingSelect5') <h6>Actualizar contraseña</h6>
+                            +invalidMessage('La contraseña debe tener entre 8 y 15 caracteres, mayúsculas, minúsculas, números y caracteres especiales.')
+                        - if (!student.enroll_active)
+                          .form-floating.d-flex.justify-content-end.m-2
+                              button.btn.btn-danger(type='button' data-student=student._id)
+                                  | Eliminar estudiante
+                        .form-floating.d-flex.justify-content-end.m-2
+                              button.btn.btn-success(type='button' data-excel=JSON.stringify([student._id, student.no_identifier])) Descargar información del estudiante
+                  .row
+                    .col-12
+                      - if (!student.enroll_active)
+                            button.act_button.form-control.btn.btn-primary(type="submit") Actualizar
+                      - else
+                          .alert.alert-warning.alert-dismissible.fade.show(role="alert")
+                              | El estudiante actualmente se encuentra cursando un periodo académico, no es posible actualizarlo por el momento.
+                              button.btn-close(type="submit", data-bs-dismiss="alert", aria-label="Close")
+template#t_s
+  tr.no_container
+      th.career(style="vertical-align:middle").text-center
+      th.level(style="vertical-align:middle").text-center
+      td.name(style="vertical-align:middle").text-center
+      td.enrollment(style="vertical-align:middle")
+      td
+        .form-check.form-switch
+          input.action.form-check-input(type="radio", role="switch", value='true', required)
+          label.form-check-label Aprobar
+        .form-check.form-switch
+          input.action.form-check-input(type="radio", role="switch", value='false', required)
+          label.form-check-label Reprobar
+#message_area
+include ../partials/footer.pug
+script(src="/socket.io/socket.io.js")
+script(src="/js/admin_act_student.js")

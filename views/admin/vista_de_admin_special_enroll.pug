@@ -1,0 +1,315 @@
+include ../partials/head.pug
+body
+include ../partials/navegacion_admin.pug
+mixin invalidMessage(message)
+  .invalid-feedback
+      =message
+mixin alert(type, message)
+ .alert.alert-dismissible.fade.show(role="alert", class=type?'alert-success':'alert-danger')
+  =message
+  button.btn-close(type="button" data-bs-dismiss="alert" aria-label="Close")
+if (success)
+ +alert(true, success)
+- if(query==true)
+ - if (result.status==true)
+  - let {subjectsInformation, enrollment, student} = result
+  - let {filteredSubjects,maxSubjects,anclSubjects,maxHours,requiredEnrollments} = subjectsInformation
+  - let studentData = [student.no_identifier, student.first_name, student.second_name, student.first_lastname, student.second_lastname]
+  input#student(type='hidden' value=JSON.stringify(studentData))
+  input#subjects(type='hidden' value=JSON.stringify(filteredSubjects.concat(anclSubjects)))
+  input#requireds(type='hidden' value=JSON.stringify(requiredEnrollments))
+  input#enrollment_features(type='hidden' value=JSON.stringify(enrollment))
+  input#subjectsLimit(type='hidden' value=maxSubjects>3?10*10:3)
+  input#max_hours(type='hidden' value=maxHours)
+h1.text-center.bg-light.p-2(style="color: #2E4053") Realizar matrícula especial
+- if(query == false) 
+    +alert(true, 'Busque al estudiante que desea matrícular de manera especial con el número de cédula.')
+input#admin_name(type="hidden", name="admin_name", value=admin_name)
+input#admin_identifier(type="hidden", name="admin_identifier", value=admin_identifier)
+.container-fluid.mb-4
+ form#form_filter
+  .row.justify-content-end.rounded.align-items-center.py-1(style="background-color:rgb(40, 55, 71)")
+   .col-12.col-lg-3.my-1
+    .form-floating
+      input.form-control(type='text' placeholder='Filtrar por numero de identificación', name="ci_filter", required)
+      label Número de identificación
+   .col-12.col-sm-12.col-md-2.col-lg-1.my-1
+      button.form-control.btn.btn-primary(type="submit") Buscar
+.container 
+  .row.justify-content-start.my-4.mx-4#card_enrollments
+   - if(query==true)
+    - if (result.status==true)
+      - let {student, enrollment, subjectsInformation} = result
+      - if (student.updated==true && student.upload_doc==true && subjectsInformation.filteredSubjects.length>0)
+        h4.student-name(style="color:#2E4053")
+          =`${student.first_name} ${student.first_lastname} ${student.no_identifier}`
+        .col-12.col-sm-8.card_container(id=`${enrollment._id}CONTAINER`)
+          .card
+            .card-header.text-center
+              h5.title(style="color:#2E4053")=enrollment.title
+            .card-body
+              .border-bottom 
+                label(for="Tipo") 
+                  strong(style="color:#2E4053") Tipo: 
+                .text-center.type=enrollment.type
+              .border-bottom 
+                label(for="Tipo") 
+                  strong(style="color:#2E4053") Fecha de inicio (clases): 
+                .text-center.start_date=enrollment.start_date 
+              .border-bottom 
+                label(for="Tipo") 
+                  strong(style="color:#2E4053") Duración (Semestre): 
+                .text-center.duration=`${enrollment.duration} semanas` 
+              .border-bottom
+                label(for="Tipo") 
+                  strong(style="color:#2E4053") Carrera: 
+                .text-center.career=enrollment.career
+              .border-bottom 
+                label(for="Tipo") 
+                  strong(style="color:#2E4053") Periodo:
+                .text-center.period=`${enrollment.period} ${enrollment.year}`
+            .card-footer
+              .row.justify-content-center
+                .col-sm-12.col-md-6
+                  button.btn.btn-primary.form-control(type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop") Matricularse
+          .enrollment_message_area
+            +alert(true, enrollment.message)
+- if(query==true)
+ - if (result.status==true)
+  - let {student, enrollment, subjectsInformation} = result
+  - if (student.updated==true && student.upload_doc==true && subjectsInformation.filteredSubjects.length>0)
+      .modal.fade#staticBackdrop(aria-modal='true' data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true")
+        .modal-dialog.modal-dialog-scrollable.modal-xl
+          .modal-content
+            .modal-header
+              h5.modal-title#staticBackdropLabel Formulario de matrícula
+              button.btn-close#modal_close(type="button" data-bs-dismiss="modal" aria-label="Close")
+            .modal-body
+              .container-fluid
+                h5.text-center Completa los siguientes datos
+                form.needs-validation(novalidate)#signatures_form
+                  .row.justify-content-around.my-4
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect1.form-select.my-2(name="differentiated_pension", required)
+                          option(value='') Ninguno
+                          option(value='true') Si
+                          option(value='false') No
+                        label(for='floatingSelect1') <strong>¿Recibe pensión diferenciada?</strong>
+                        +invalidMessage('Indique si recibe pensión diferenciada.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect10.form-select.my-2(name="work_day", required)
+                          option(value='') Ninguno
+                          option(value='MATUTINA') Matutina
+                          option(value='NOCTURNA') Nocturna
+                        label(for='floatingSelect10') <strong>Sección del estudiante</strong>
+                        +invalidMessage('Seleccione la secció en la que desea matricularse.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect2.form-select.my-2(name="student_occupation", required)
+                          option(value='') Ninguno
+                          option(value='SOLO ESTUDIA') Solo estudia
+                          option(value='TRABAJA Y ESTUDIA') Trabaja y estudia
+                        label(for='floatingSelect2') <strong>Ocupación del estudiante</strong>
+                        +invalidMessage('Seleccione su ocupación.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect3.form-select.my-2(name="student_income", disabled)
+                          option(value='') Ninguno
+                          option(value='FINANCIAR SUS ESTUDIOS') Financiar sus estudios
+                          option(value='GASTOS PERSONALES') Gastos personales
+                          option(value='MANTENER SU HOGAR') Mantener su hogar
+                        label(for='floatingSelect3') <strong>¿Para qué usa sus ingresos?</strong>
+                        +invalidMessage('Indique el objetivo de sus ingresos.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect4.form-select.my-2(name="development_bonus", required)
+                          option(value='') Ninguno
+                          option(value='true') Si
+                          option(value='false') No
+                        label(for='floatingSelect4') <strong>¿Posee bono de desarrollo?</strong>
+                        +invalidMessage('Por favor seleccione si recibe bono de desarrollo.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect5.form-select.my-2(name="type_scholarship", required)
+                          option(value='NO APLICA') No aplica
+                          option(value='TOTAL') Total
+                          option(value='PARCIAL') Parcial
+                        label(for='floatingSelect5') <strong>Tipo de beca</strong>
+                        +invalidMessage('Indique el tipo de beca.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect6.form-select.my-2(name="scholarship_reason", disabled)
+                          option(value='') Ninguna
+                          option(value='SOCIOECONOMICA') Socioeconómica
+                          option(value='ACADEMICA') Académica
+                        label(for='floatingSelect6') <strong>Razon de beca</strong>
+                        +invalidMessage('Indique la razón de la beca.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        input#floatingInput1.form-control.my-2(type="number" name="scholarship_amount" placeholder="Monto de beca en dólares", min=1, disabled)
+                        label(for="floatingInput1") Monto de beca en dólares
+                        +invalidMessage('Indique el monto de la beca en dólares.')
+                    .col-sm-12.col-lg-6.text-center
+                      input.form-range#tariff_coverage.mt-2.mb-0(type="range" name="tariff_coverage", min=10, max=100, step=5, disabled)
+                      label.form-label.m-0(for="tariff_coverage") 
+                        span#tariff_coverage_area.m-0 Cobertura arancel: NO APLICA
+                      +invalidMessage('Indique el porcentaje de cobertura arancel.')  
+                    .col-sm-12.col-lg-6.text-center
+                      input.form-range#maintenance_coverage.mt-2.mb-0(type="range" name="maintenance_coverage", min=10, max=100, step=5, disabled)
+                      label.form-label.m-0(for="maintenance_coverage") 
+                        span#maintenance_coverage_area.m-0 Cobertura manutención: NO APLICA
+                      +invalidMessage('Indique el porcentaje de cobertura manutención.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect7.form-select.my-2(name="scholarship_funding", disabled)
+                          option(value='') Ninguna
+                          option(value='TRANSFERENCIA DEL ESTADO') Transferencia del estado
+                          option(value='OTRAS') Otras
+                        label(for='floatingSelect7') <strong>Financiamiento de la beca</strong>
+                        +invalidMessage('Seleccione el financiamiento de la beca.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect8.form-select.my-2(name="educative_credit", required)
+                          option(value='') Ninguno
+                          option(value='true') Si
+                          option(value='false') No
+                        label(for='floatingSelect8') <strong>¿Tiene crédito educativo?</strong>
+                        +invalidMessage('Indique si tiene crédito educativo.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        input#floatingInput6.form-control.my-2(type="number" name="economic_aid" placeholder="Monto de ayuda económica",  value=0 , min=0, required)
+                        label(for="floatingInput6") Monto de ayuda económica
+                        +invalidMessage('Indique el monto de ayuda económica, en caso de no poseer indique el valor de 0.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        input#floatingInput2.form-control.my-2(type="number" name="members_family" placeholder="Cantidad de miembros en el hogar", min=1, required)
+                        label(for="floatingInput2") Cantidad de miembros en el hogar
+                        +invalidMessage('Indique la cantidad de miembros en su hogar.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        input#floatingInput3.form-control.my-2(type="string" name="emergency_contact" placeholder="NOMBRE APELLIDO" pattern="\\s?(?:\\b[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð,.'-]{2,}\\b[\\s\\r\\n]{0,1}){2,}", style="text-transform:uppercase", required)
+                        label(for="floatingInput3") Contacto de emergencia (NOMBRE Y APELLIDO)
+                        +invalidMessage('Introduzca el nombre de su contacto de emergencia. Procure evitar espacios en blanco al final del texto, tenga cuidado con los espacios en blanco al inicio y final del nombre, y debe específicar al menos un nombre y un apellido.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        input#floatingInput4.form-control.my-2(type="text" placeholder="Escriba el número celular de su contacto de emergencia" name="no_emergency_contact" title="Este campo solo acepta 10 números sin espacios en blanco." pattern="^[0-9]{10}", required)
+                        label(for="floatingInput4") Número celular de contacto de emergencia
+                        +invalidMessage('Introduzca el número de celular de su contacto de emergencia. Por favor verifique que sea un formato válido y evite espacios en blanco al final del número.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        select#floatingSelect9.form-select.my-2(name="higher_degree", required)
+                          option(value='') Ninguno
+                          option(value='true') Si
+                          option(value='false') No
+                        label(for='floatingSelect9') <strong>¿Posee un título de educación superior?</strong>
+                        +invalidMessage('Indique si posee un título de educación superior.')
+                    .col-sm-12.col-lg-6
+                      .form-floating
+                        input#floatingInput5.form-control.my-2(type="text" placeholder="Escriba el nombre del titulo." name="title_name" title="Introduzca un formato valido." pattern="[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s+)?", style="text-transform:uppercase", required)
+                        label(for="floatingInput5") Especifique el titulo (Bachillerato o superior)
+                        +invalidMessage('Especifique el titulo. Por favor verifique que sea un formato válido y evite espacios en blancos al final del texto.')
+                    .col-sm-12.col-lg-6
+                  .row.justify-content-around.my-4
+                    .col-sm-12.col-lg-6
+                      label.m-1.form-label(for="formFile1") 
+                        strong(style="color: #2E4053") Formulario de matrícula (PDF)
+                      input.form-control#formFile1(name="f_registration_form" type="file", required)
+                      +invalidMessage('Por favor cargue el documento indicado.')
+                    .col-sm-12.col-lg-6
+                      label.m-1.form-label(for="formFile2") 
+                        strong(style="color: #2E4053") Solicitud de materias (PDF)
+                      input.form-control#formFile2(name="f_request_subjects" type="file", required)
+                      +invalidMessage('Por favor cargue el documento indicado.')
+                    .col-sm-12.col-lg-6
+                      label.m-1.form-label(for="formFile3") 
+                        strong(style="color: #2E4053") Certificado de no adeudar valores a senescyt (PDF)
+                      input.form-control#formFile3(name="f_nodebt_certificated" type="file")
+                      +invalidMessage('Por favor cargue el documento indicado.')
+                    .col-sm-12.col-lg-6
+                      label.m-1.form-label(for="formFile5") 
+                        strong(style="color: #2E4053") Solicitud de aumento de horas semanales (PDF)
+                      input.form-control#formFile5(name="f_hours_request" type="file", disabled)
+                      +invalidMessage('Por favor cargue el documento indicado.')
+                    .col-sm-12.col-lg-6
+                      label.m-1.form-label(for="formFile4") 
+                        strong(style="color: #2E4053") Comprobante de cobro y certificado de pago (PDF)
+                      input.form-control#formFile4(name="f_certificated_payment" type="file")
+                      +invalidMessage('Por favor cargue el documento indicado.')
+                    -if(enrollment.type=='ESPECIAL')
+                      .col-sm-12.col-lg-6
+                        label.m-1.form-label(for="formFile6") 
+                          strong(style="color: #2E4053") Justificativo(s) de matrícula especial (PDF)
+                        input.form-control#formFile6(name="f_ext_ofi" type="file", disabled=enrollment.type=='ESPECIAL'?false:true, required=enrollment.type=='ESPECIAL'?true:false)
+                        +invalidMessage('Por favor cargue el documento indicado.')
+                    .col-sm-12.col-lg-6
+                    #files_message_area.mt-3
+                  .row
+                    .col-sm-12.col-lg-6.text-start
+                      label.m-1.form-label 
+                        h5 Formatos 
+                          a(href='http://www.ispibmbr.edu.ec/formatos-de-solicitudes/' target='_blank') 
+                            strong aquí
+                    .col-sm-12.col-lg-6.text-start
+                      label.m-1.form-label 
+                        h5 Malla curricular 
+                          a(href='http://www.ispibmbr.edu.ec/carreras/' target='_blank') 
+                            strong aquí
+                  .row
+                   .col.overflow-auto
+                     table.table.table-striped.table-hover.rounded
+                        thead.text-white(style="background-color:rgb(40, 55, 71)")
+                        tr
+                          th(scope='col') Semestre
+                          th(scope='col') Nombre
+                          th(scope='col') #
+                          th(scope='col') Horas semanales
+                          th(scope='col') Acción
+                        tbody#signatures_area
+                         each subject in subjectsInformation.filteredSubjects
+                          - let {no,level,name,enrollment,weekly_hours} = subject
+                          tr(id=`${no}CONTAINER`)
+                            th(style="vertical-align:middle")=level 
+                            td(style="vertical-align:middle")=name
+                            td(style="vertical-align:middle")=enrollment
+                            td.text-center(style="vertical-align:middle")=weekly_hours 
+                            td
+                              .form-check
+                                input.form-check-input(type="checkbox" id=no, value=weekly_hours, name=no data-ns='true')
+                                label.form-check-label Matricularme
+                        if (subjectsInformation.hasAncl)
+                          - function existSubject(ancl) {if(subjectsInformation.anclSubjects.some(sub => sub.no == ancl)||subjectsInformation.filteredSubjects.some(sub => sub.no == ancl)){return 'true'}else{return 'false'}}
+                          each subject in subjectsInformation.anclSubjects
+                            - let {no,level,name,enrollment,weekly_hours,ancl} = subject
+                            tr(id=`${no}CONTAINER`)
+                                th(style="vertical-align:middle")=level 
+                                td(style="vertical-align:middle")=name
+                                td(style="vertical-align:middle")=enrollment
+                                td.text-center(style="vertical-align:middle")=weekly_hours 
+                                td
+                                  .form-check
+                                    input.form-check-input(type="checkbox" id=no, value=weekly_hours, name=no, data-as='true', data-change=existSubject(ancl) data-ancl=ancl)
+                                    label.form-check-label Matricularme
+                  .row
+                    .row.justify-content-center
+                      .col-sm-12.col-md-5
+                        button.btn.btn-primary.form-control#submit_button(type="submit") Matricularse
+                #hrs.mt-3
+                #signatures_message_area.mt-3               
+#message_area
+  - if(query==true)
+    - if(!result.status)
+          +alert(false,result.message)
+    - else
+          - let {student, subjectsInformation} = result
+          - if (!student.updated)
+            +alert(false,'El estudiante tiene que actualizar su información antes de realizar cualquier proceso de matriculación.')
+          - if (!student.upload_doc)
+            +alert(false,'El estudiante tiene que subir su documentación antes de realizar cualquier proceso de matriculación.')
+          - if (subjectsInformation.filteredSubjects.length<=0)
+            +alert(false, 'Ya no hay materias en las que el estudiante pueda matricularse.')
+#message_area2
+include ../partials/footer.pug
+script(src="/socket.io/socket.io.js")
+script(src="/js/admin_special_enroll.js")

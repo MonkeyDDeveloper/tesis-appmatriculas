@@ -1,0 +1,101 @@
+.container-fluid.p-0
+  nav.navbar.navbar-light.bg-light
+      .row.justify-content-between(style="width:100%")
+          .col-auto
+            a.navbar-brand
+              button.btn.btn-light.border.mx-2(title='Abrir menú.' type="button", data-bs-toggle="offcanvas", data-bs-target="#offcanvasWithBackdrop", aria-controls="offcanvasWithBackdrop")
+                i.fa.fa-bars.fa-2x(aria-hidden="true", style="color: #2E4053")
+              img.mr-2(title="ISPIB LOGO" src="../images/icono_ispedib.ico")
+              |       Matriculaciones ISPIB MBR
+          .col-auto
+            a(href="/logout")  
+              button.btn.btn-light.border(type="button", data-bs-toggle="tooltip", data-bs-placement="left",  title="Cerrar sesión", style="background-color: #FFC300;")
+                i.fa.fa-sign-out.fa-2x(aria-hidden="true", style="color: #2E4053")
+.offcanvas.offcanvas-start#offcanvasWithBackdrop(tabindex="-1", aria-labelledby="offcanvasWithBackdropLabel")
+  .offcanvas-header.border-bottom
+    i.fa.fa-user.fa-2x(style="color: #2E4053") 
+    h5.offcanvas-title#offcanvasWithBackdropLabel(style="color: #2E4053")=admin_name || name
+    button.btn-close.text-reset(title='Cerrar menú.', type="button", data-bs-dismiss="offcanvas", aria-label="Close")
+  .offcanvas-body
+    .row.row-cols-1
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/admin/index", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+              h6(style="color: #2E4053") Calificar matriculas regulares
+            .col-auto.m-0.p-0.bg-light
+              i.fa.fa-check(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/admin/titulacion", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+              h6(style="color: #2E4053") Calificar matriculas en titulación
+            .col-auto.m-0.p-0.bg-light
+              i.fa.fa-thumbs-up(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/admin/nuevo_proceso", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Iniciar nuevo proceso de matriculación
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-plus(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/admin/nuevo_proceso_matriculacion", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Iniciar nuevo periodo de titulación
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-graduation-cap(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/admin/act_student", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Actualizar estudiante
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-pencil-square-o(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/admin/matricula_especial", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Realizar matricula especial
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-address-card(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/admin/all_enrollments", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Ver todas las matriculas regulares
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-search(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/admin/all_enrollments_titulacion", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Ver todas las matriculas en titulación
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-search-plus(style="color: #2E4053")
+      .col.p-0
+       .shadow-sm.mb-2.bg-body.rounded
+        .d-grid.gap-2
+          a.text-start.btn.btn-light(href="/admin/activities", role="button")
+           .row.row-cols-2.justify-content-between.bg-light.p-0.m-0
+            .col-auto.m-0.p-0.bg-light
+             h6(style="color: #2E4053") Registro de actividades
+            .col-auto.m-0.p-0.bg-light
+             i.fa.fa-list(style="color: #2E4053")

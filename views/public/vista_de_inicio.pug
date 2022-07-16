@@ -1,0 +1,94 @@
+include ../partials/head.pug
+body(style="background-color:#2E4053")
+include ../partials/navegacion_inicio.pug
+if (success) 
+  .alert.alert-success.alert-dismissible.fade.show(role="alert")
+    strong=success
+    button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+if (error) 
+  .alert.alert-danger.alert-dismissible.fade.show(role="alert")
+    strong=error
+    button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+.container-fluid.mt-5
+ .row.justify-content-between
+  .col-12.col-sm-12.col-md-7.col-lg-8.align-self-center
+   #carouselExampleInterval.carousel.slide.mt-1(data-bs-ride="carousel")
+    .carousel-inner.rounded
+     .carousel-item.active(data-bs-interval="5000")
+        .row.justify-content-center
+          .col.text-center
+            img.img-fluid(src="images/auto_img_1.jpg", alt="Automatización e Instrumentación")
+            .carousel-caption.d-none.d-md-block.text-white.p-0.rounded(style="background-color:rgba(40, 55, 71, .8)")
+              h5.mt-2 Tecnología Superior en Automatización e Instrumentación 
+              p Instituto Superior Pedagógico Intercultural Bilingue Martha Bucaram de Roldós
+     .carousel-item(data-bs-interval="5000")
+        .row.justify-content-center
+          .col.text-center
+            img.img-fluid(src="images/mon_img_1.jpg", alt="Monitoreo Ambiental")
+            .carousel-caption.d-none.d-md-block.text-white.p-0.rounded(style="background-color:rgba(39, 174, 96, .6)")
+              h5.mt-2 Tecnología Superior en Monitoreo Ambiental
+              p Instituto Superior Pedagógico Intercultural Bilingue Martha Bucaram de Roldós
+     .carousel-item(data-bs-interval="5000")
+        .row.justify-content-center
+          .col.text-center
+            img.img-fluid(src="images/des_img_1.jpg", alt="Desarrollo Infantil Integral")
+            .carousel-caption.d-none.d-md-block.text-white.p-0.rounded(style="background-color:rgba(192, 57, 43, .7)")
+              h5.mt-2 Tecnología Superior en Desarrollo Infantil Integral
+              p Instituto Superior Pedagógico Intercultural Bilingue Martha Bucaram de Roldós
+     .carousel-item(data-bs-interval="5000")
+        .row.justify-content-center
+          .col.text-center
+            img.img-fluid(src="images/meca_img.jpg", alt="Mecatrónica")
+            .carousel-caption.d-none.d-md-block.text-white.p-0.rounded(style="background-color:rgba(230, 126, 34, .7)")
+              h5.mt-2 Tecnología Superior en Mecatrónica
+              p Instituto Superior Pedagógico Intercultural Bilingue Martha Bucaram de Roldós
+     .carousel-item(data-bs-interval="5000")
+        .row.justify-content-center
+          .col.text-center
+            img.img-fluid(src="images/mecainds_img.jpg", alt="Mecánica Industrial")
+            .carousel-caption.d-none.d-md-block.text-white.p-0.rounded(style="background-color:rgba(91, 44, 111, .7)")
+              h5.mt-2 Tecnología Superior en Mecánica Industrial
+              p Instituto Superior Pedagógico Intercultural Bilingue Martha Bucaram de Roldós
+     .carousel-item(data-bs-interval="5000")
+        .row.justify-content-center
+          .col.text-center
+            img.img-fluid(src="images/solda_img.jpg", alt="Soldadura")
+            .carousel-caption.d-none.d-md-block.text-white.p-0.rounded(style="background-color:rgba(128, 128, 128, .7)")
+              h5.mt-2 Tecnología Superior en Soldadura
+              p Instituto Superior Pedagógico Intercultural Bilingue Martha Bucaram de Roldós
+     .carousel-item(data-bs-interval="5000")
+        .row.justify-content-center
+          .col.text-center
+            img.img-fluid(src="images/segu_img.jpg", alt="Prevención de riesgos")
+            .carousel-caption.d-none.d-md-block.text-white.p-0.rounded(style="background-color:rgba(0, 0, 255, .7)")
+              h5.mt-2 Tecnología Superior en Seguridad y Prevención de riesgos
+              p Instituto Superior Pedagógico Intercultural Bilingue Martha Bucaram de Roldós
+    .justify-content-sm-center.justify-content-md-center.justify-content-lg-start.justify-content-xl-start.justify-content-xxl-center.carousel-control-prev(type="button", data-bs-target="#carouselExampleInterval", data-bs-slide="prev")
+     span.carousel-control-prev-icon
+    .justify-content-sm-center.justify-content-md-center.justify-content-lg-end.justify-content-xl-end.justify-content-xxl-center.carousel-control-next(type="button", data-bs-target="#carouselExampleInterval", data-bs-slide="next")
+     span.carousel-control-next-icon
+  .col-12.col-sm-12.col-md-5.col-lg-4.mt-1
+   .container-fluid.py-2.rounded(style="background-color: #FFC300; height:100%")
+     .row.justify-content-center.align-items-center(style="height:100%")
+      .col-12.col-sm-8.col-md-12
+       form.needs-validation(novalidate autocomplete="false")#form_session
+        .card
+         .card-header.text-center(style="color: #2E4053")
+          h4 <strong> Inicia sesión </strong> 
+         .card-body
+          .form-group
+            .form-floating.mb-3
+              input.form-control#floatingInput(type="text", name="email", placeholder="correode@ejemplo.com", required)
+              label(for="floatingInput") Correo electrónico
+          .form-group
+            .input-group.mb-3
+              input.form-control#floatingInput_2(type="password", autocomplete="new-password",name="password", placeholder="Ingrese su contraseña", required)
+              span.input-group-text
+                i#see_password(class="fa fa-eye" aria-hidden="true")
+          .form-group#alert_area
+          button.col-12.btn.btn-primary#button_submit(type="submit") Ingresar
+         .card-footer.text-center
+          h5 <strong> No tienes cuenta? </strong>
+          a.btn.btn-primary(href="/registro") Registrate ya!
+include ../partials/footer.pug
+script(src="js/inicio.js")  

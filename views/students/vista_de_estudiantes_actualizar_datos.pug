@@ -1,0 +1,272 @@
+include ../partials/head.pug
+script(src="../js/mapbox-gl.js")
+link(href="/css/mapbox-gl.css", rel="stylesheet") 
+body
+ mixin invalidMessage(message)
+      .invalid-feedback
+          =message
+ include ../partials/navegacion_estudiantes.pug
+ if (success)
+  .alert.alert-success.alert-dismissible.fade.show(role="alert")
+    strong=success
+    button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+ .container-fluid.mt-3.text-center
+  h2(style="color: #2E4053") Actualiza tu información
+  .alert.alert-warning.alert-dismissible.fade.show(role="alert")
+    p Recuerde revisar su información siempre que vaya a iniciar un proceso de matriculación, así nos ayuda a que los datos de su matricula sean correctamente almacenados, gracias!
+    button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+  .row.justify-content-center.mt-3.mb-4
+   .col-12.col-sm-10
+    form.needs-validation(novalidate)#form_actualizar
+     input#no_identifier(type="hidden", name="no_identifier", value=identifier)
+     .row.row-cols-3.justify-content-between
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#validationCustom01.form-select(name="sex", title='Séxo', required)
+            option(value='' selected=student.sex?false:true) Ninguno
+            option(value='true' selected=student.sex==true?true:false) Hombre
+            option(value='false' selected=student.sex==false?true:false) Mujer
+          label(for='validationCustom01') <strong>Sexo</strong>
+          +invalidMessage('Por favor seleccione su séxo.')         
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect.form-select(name="gender", required)
+            option(value='' selected=student.gender?false:true) Ninguno
+            option(value='true' selected=student.gender==true?true:false) Masculino
+            option(value='false' selected=student.gender==false?true:false) Femenino
+          label(for='floatingSelect') <strong>Género</strong>
+          +invalidMessage('Por favor seleccione su género.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect2.form-select(name="marital_status", required)
+            option(value='' selected=student.marital_status=='UNDEFINED'?true:false) Ninguno
+            option(value='SOLTERO' selected=student.marital_status=='SOLTERO'?true:false) Soltero/a
+            option(value='CASADO' selected=student.marital_status=='CASADO'?true:false) Casado/a
+            option(value='UNION LIBRE' selected=student.marital_status=='UNION LIBRE'?true:false) Unión libre
+            option(value='DIVORCIADO' selected=student.marital_status=='DIVORCIADO'?true:false) Divorciado/a
+            option(value='VIUDO' selected=student.marital_status=='VIUDO'?true:false) Viudo/a
+          label(for='floatingSelect2') <strong>Estado civil</strong>
+          +invalidMessage('Por favor seleccione su estado civil.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect3.form-select(name="ethnicity", required)
+            option(value='' selected=student.ethnicity=='UNDEFINED'?true:false) Ninguno
+            option(value='AFROECUATORIANO' selected=student.ethnicity=='AFROECUATORIANO'?true:false) Afroecuatoriano
+            option(value='BLANCO' selected=student.ethnicity=='BLANCO'?true:false) Blanco
+            option(value='INDIGENA' selected=student.ethnicity=='INDIGENA'?true:false) Indígena
+            option(value='MESTIZO' selected=student.ethnicity=='MESTIZO'?true:false) Mestizo
+            option(value='MONTUVIO' selected=student.ethnicity=='MONTUVIO'?true:false) Montuvio
+            option(value='MULATO' selected=student.ethnicity=='MULATO'?true:false) Mulato
+            option(value='NEGRO' selected=student.ethnicity=='NEGRO'?true:false) Negro
+            option(value='OTRO' selected=student.ethnicity=='OTRO'?true:false) Otro
+          label(for='floatingSelect3') <strong>Etnia</strong>
+          +invalidMessage('Por favor seleccione su etnia.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect4.form-select(name="village", disabled=student.ethnicity!='INDIGENA'?true:false)
+            option(value='' selected) Ninguno
+            each pueblo in ['Cofan','Secoya','Shiwiar','Shuar','Waorani','Sapara','Andoa','Siona','Huancavilca','Manta','Palta','Chibuleo','Kanari','Karanki','Kayampi','Kisapincha','Kitu-Kara','Natabuela','Otavalo','Panzaleo','Puruha','Salasaca','Saraguro','Tomabela','Waranka','Quijos','Pasto']
+              option(value=`${pueblo.toUpperCase()}` selected=student.village==pueblo.toUpperCase()?true:false)=pueblo
+          label(for='floatingSelect4') <strong>Pueblo nacional</strong>
+          +invalidMessage('Por favor seleccione el pueblo nacional al que pertenece.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect5.form-select(name="blood_type", required)
+            option(value='' selected=student.blood_type=='UNDEFINED'?true:false) Ninguno
+            option(value='O+' selected=student.blood_type=='O+'?true:false) O+
+            option(value='O-' selected=student.blood_type=='O-'?true:false) O-
+            option(value='A+' selected=student.blood_type=='A+'?true:false) A+
+            option(value='A-' selected=student.blood_type=='A-'?true:false) A-
+            option(value='B+' selected=student.blood_type=='B+'?true:false) B+
+            option(value='B-' selected=student.blood_type=='B-'?true:false) B-
+            option(value='AB+' selected=student.blood_type=='AB+'?true:false) AB+
+            option(value='AB-' selected=student.blood_type=='AB-'?true:false) AB-
+            option(value='DESCONOCIDO' selected=student.blood_type=='DESCONOCIDO'?true:false) Desconozco, me comprometo a averiguarlo cuando sea posible
+          label(for='floatingSelect5') <strong>Tipo de sangre</strong>
+          +invalidMessage('Por favor seleccione su tipo de sangre.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect6.form-select(name="disability", required)
+            option(value='' selected=student.disability?false:true) Ninguno
+            option(value='true'  selected=student.disability==true?true:false) Si
+            option(value='false' selected=student.disability==false?true:false ) No
+          label(for='floatingSelect6') <strong>Posee discapacidad</strong>
+          +invalidMessage('Por favor indique si posee alguna discapacidad.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect7.form-select(name="disability_type", disabled=!student.disability)
+            option(value='' selected=student.disability_type=='NO APLICA'?true:false) Ninguno
+            option(value='MENTAL' selected=student.disability_type=='MENTAL'?true:false) Mental
+            option(value='VISUAL' selected=student.disability_type=='VISUAL'?true:false) Visual
+            option(value='AUDITIVA' selected=student.disability_type=='AUDITIVA'?true:false) Auditiva
+            option(value='INTELECTUAL' selected=student.disability_type=='INTELECTUAL'?true:false) Intelectual
+            option(value='FISICA' selected=student.disability_type=='FISICA'?true:false) Fisica
+            option(value='OTRA' selected=student.disability_type=='OTRA'?true:false) Otra
+          label(for='floatingSelect7') <strong>Tipo de discapacidad</strong>
+          +invalidMessage('Por favor seleccione su tipo de discapacidad.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        input.form-range#porcentaje_de_discapacidad(type="range", name="disability_percentage", min=25, max=100, step=5, value=student.disability_percentage!='NO APLICA'?student.disability_percentage:'', title='Porcentaje de discapacidad.', disabled=!student.disability)
+        label.form-label(for="customRange3")
+          span#porcentaje_numero
+            - if(student.disability)
+                | Porcentaje de discapacidad: 
+                strong=student.disability_percentage + '%'
+            - else
+                | #{student.disability_percentage}
+        +invalidMessage('Por favor indique su porcentaje de discapacidad.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          input#floatingInput.form-control(type='text', name="conadis_msp", title="Este campo acepta números sin espacios en blanco.", pattern="^([0-9]{10}|[0-9]{5})", placeholder='Numero de Carnet CONADIS/MSP', value=student.conadis_msp!='NO APLICA'?student.conadis_msp:'', disabled=!student.disability)
+          label.text-muted(for='floatingInput') Identificación CONADIS/MSP
+          +invalidMessage('Introduzca su ID de discapacidad. Por favor verifique que sea un formato válido y evite espacios al final del ID.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          input#floatingInput20.form-control(type="text" placeholder="Escriba su numero celular" name="no_celular" title="Este campo solo acepta 10 números sin espacios en blanco." pattern="^[0-9]{10}", value=student.no_celular, required)
+          label.text-muted(for='floatingInput19') Número celular
+          +invalidMessage('Introduzca su número de celular. Por favor verifique que sea un formato válido y evite espacios en blanco al final del número.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          input#floatingInput21.form-control(type="text" placeholder="Escriba su numero de telefono" name="no_telf" title="Este campo solo acepta números de telefono con o sin extensión." pattern="^([0-9]{6}|[0-9]{9})" value=student.no_telf, required)
+          label.text-muted(for='floatingInput20') Número de teléfono fijo
+          +invalidMessage('Introduzca su número de telefono fijo. Por favor verifique que sea un formato válido y evite espacios en blanco al final del número.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          input#floatingInput22.form-control(type="email" placeholder="Ingrese su correo electronico" name="email" title="Por favor ingrese un correo válido." pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$", value=student.email, required)
+          label.text-muted(for='floatingInput21') Email
+          +invalidMessage('Introduzca su email. Por favor verifique que sea un formato válido y que no contenga espacios al final del correo.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect8.form-select(name="nationality", required)
+            option(value='' selected=student.nationality=='UNDEFINED'?true:false) Ninguno
+            option(value='ECUADOR' selected=student.nationality=='ECUADOR'?true:false) Ecuador
+            option(value='COLOMBIA' selected=student.nationality=='COLOMBIA'?true:false) Colombia
+            option(value='PERU' selected=student.nationality=='PERU'?true:false) Perú
+            option(value='OTRO' selected=student.nationality=='OTRO'?true:false) Otro
+          label(for='floatingSelect8') <strong>Pais - Nacionalidad</strong>
+          +invalidMessage('Por favor seleccione su nacionalidad.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect9.form-select(name="province_birth", required=student.nationality=='ECUADOR'?true:false)
+            option(value=student.nationality=='ECUADOR'?'':'NO APLICA' selected=student.province_birth=='NO APLICA'?true:false) Ninguno
+            each provincia in ['Azuay','Bolivar','Canar','Carchi','Chimborazo','Cotopaxi','El Oro','Esmeraldas','Galapagos','Guayas','Imbabura','Loja','Los Rios','Manabi','Morona Santiago','Napo','Orellana','Pastaza','Pichincha','Santa Elena','Santo Domingo de los Tsachilas','Sucumbios','Tungurahua','Zamora Chinchipe'] 
+              option(value=`${provincia.toUpperCase()}` selected=student.province_birth==provincia.toUpperCase()?true:false)=provincia
+          label(for='floatingSelect9') <strong>Provincia de nacimiento</strong>
+          +invalidMessage('Por favor seleccione su provincia de nacimiento.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          - let cantones = {AZUAY:['Chordeleg', 'Cuenca', 'El Pan', 'Giron', 'Guachapala', 'Gualaceo', 'Nabon', 'Ona', 'Paute', 'Ponce Enriquez', 'Pucara', 'San Fernando', 'Santa Isabel', 'Sevilla de Oro', 'Sigsig'],BOLIVAR:['Caluma', 'Chillanes', 'Chimbo', 'Echeandia', 'Guaranda', 'LasNaves', 'San Miguel'],CANAR:['Azogues', 'Biblian', 'Canar', 'Deleg', 'El Tambo', 'La Troncal','Suscal'],CARCHI:['Bolivar', 'Espejo', 'Mira', 'Montufar', 'San Pedro de Huaca', 'Tulcan'],CHIMBORAZO:['Alausi', 'Colta', 'Cumanda', 'Chambo', 'Chunchi', 'Guamote','Guano', 'Pallatanga', 'Penipe', 'Riobamba'],COTOPAXI:['La Mana', 'Latacunga', 'Pangua', 'Pujili', 'Salcedo','Saquisili', 'Sigchos'],ELORO:['Arenillas', 'Atahualpa', 'Balsas', 'Chilla', 'El Guabo','Huaquillas', 'Las Lajas', 'Machala', 'Marcabeli', 'Pasaje', 'Piñas','Portovelo', 'Santa Rosa', 'Zaruma'],ESMERALDAS:['Atacames', 'Eloy Alfaro', 'Esmeraldas', 'Muisne','Quininde', 'Rioverde', 'San Lorenzo'],GALAPAGOS:['Isabela', 'San Cristobal', 'Santa Cruz'],GUAYAS:['Alfredo Baquerizo Moreno', 'Balao', 'Balzar', 'Colimes','Daule', 'Duran', 'El Empalme', 'El Triunfo', 'Gral. Antonio Elizalde','Gral. Villamil Playas', 'Guayaquil', 'Isidro Ayora', 'Lomas de Sargentillo', 'Marcelino Mariduena', 'Milagro', 'Naranjal', 'Naranjito', 'Nobol', 'Palestina', 'Pedro Carbo', 'Salitre', 'Samborondon', 'Santa Lucia', 'Simon Bolivar', 'Yaguachi'],IMBABURA:['Antonio Ante', 'Cotacachi', 'Ibarra', 'Otavalo', 'Pimampiro','Urcuqui'],LOJA:['Calvas', 'Catamayo', 'Celica', 'Chaguarpamba', 'Espindola','Gonzanama', 'Loja', 'Macara', 'Olmedo', 'Paltas', 'Pindal', 'Puyango','Quilanga', 'Saraguro', 'Sozoranga', 'Zapotillo'],LOSRIOS:['Baba', 'Babahoyo', 'Buena Fe', 'Mocache', 'Montalvo','Palenque', 'Puebloviejo', 'Quevedo', 'Quinsaloma', 'Urdaneta','Valencia', 'Ventanas', 'Vinces'],MANABI:['Bolivar', 'Chone', 'El Carmen', 'Flavio Alfaro', 'Jama','Jaramijo', 'Jipijapa', 'Junin', 'Manta', 'Montecristi', 'Olmedo','Pajan', 'Pedernales', 'Pichincha', 'Portoviejo', 'Puerto Lopez', 'Rocafuerte', 'San Vicente', 'Santa Ana', 'Sucre', 'Tosagua', 'Veinticuatro de Mayo'],MORONASANTIAGO:['Morona', 'Gualaquiza', 'Limon Indanza', 'Palora', 'Santiago deMendez', 'Sucua', 'Huamboya', 'San Juan Bosco', 'Taisha', 'Logrono','Pablo VI', 'Taisha'],NAPO:['Archidona', 'Carlos Julio Arosemena Tola', 'El Chaco', 'Quijos','Tena'],ORELLANA:['Aguarico', 'Orellana', 'La Joya de los Sachas', 'Loreto'],PASTAZA:['Arajuno', 'Mera', 'Pastaza', 'Santa Clara'],PICHINCHA:['Cayambe', 'Mejia', 'Pedro Moncayo', 'Pedro VicenteMaldonado', 'Puerto Quito', 'Distrito Metropolitano de Quito','Ruminahui', 'San Miguel de Los Bancos'],SANTAELENA:['La Libertad', 'Salinas', 'Santa Elena'],SANTODOMINGODELOSTSACHILAS:['La Concordia', 'Santo Domingo'],SUCUMBIOS:['Cascales', 'Cuyabeno', 'Gonzalo Pizarro', 'Lago Agrio', 'Putumayo', 'Shushufindi', 'Sucumbios'],TUNGURAHUA:['Ambato', 'Baños de Agua Santa', 'Cevallos', 'Mocha', 'Patate', 'Pelileo', 'Pillaro', 'Quero', 'Tisaleo'],ZAMORACHINCHIPE:['Centinela del Condor', 'Chinchipe', 'El Pangui', 'Nangaritza', 'Palanda', 'Paquisha', 'Yacuambi', 'Yantzaza', 'Zamora']}
+          select#floatingSelect10.form-select(name="canton_birth", required=student.nationality=='ECUADOR'?true:false)
+            option(value=student.nationality=='ECUADOR'?'':'NO APLICA' selected=student.canton_birth=='NO APLICA'?true:false) Ninguno
+            if (student.province_birth!='NO APLICA')
+              each canton in cantones[student.province_birth.replace(/\s+/g, '')]
+                option(value=`${canton.toUpperCase()}` selected=student.canton_birth==canton.toUpperCase()?true:false)=canton
+          label(for='floatingSelect10') <strong>Cantón de nacimiento</strong>
+          +invalidMessage('Por favor seleccione su cantón de nacimiento.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect11.form-select(name="country_residence", required)
+            option(value='ECUADOR' selected) Ecuador 
+          label(for='floatingSelect11') <strong>Pais de Residencia</strong>
+          +invalidMessage('Por favor seleccione su país de residencia.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect12.form-select(name="province_residence", required)
+            option(value="" selected=student.province_residence=='UNDEFINED'?true:false) Ninguno
+            each provincia in ['Azuay','Bolivar','Canar','Carchi','Chimborazo','Cotopaxi','El Oro','Esmeraldas','Galapagos','Guayas','Imbabura','Loja','Los Rios','Manabi','Morona Santiago','Napo','Orellana','Pastaza','Pichincha','Santa Elena','Santo Domingo de los Tsachilas','Sucumbios','Tungurahua','Zamora Chinchipe'] 
+              option(value=`${provincia.toUpperCase()}` selected=student.province_residence==provincia.toUpperCase()?true:false)=provincia
+          label(for='floatingSelect12') <strong>Provincia de residencia</strong>
+          +invalidMessage('Por favor seleccione su provincia de residencia.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect13.form-select(name="canton_residence", required)
+            option(value="" selected=student.canton_residence=='UNDEFINED'?true:false) Ninguno
+            - if (student.province_residence!='UNDEFINED')
+                each canton in cantones[student.province_residence.replace(/\s+/g, '')]
+                  option(value=`${canton.toUpperCase()}` selected=student.canton_residence==canton.toUpperCase()?true:false)=canton
+          label(for='floatingSelect13') <strong>Cantón de residencia</strong>
+          +invalidMessage('Por favor seleccione su cantón de residencia.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect14.form-select(name="type_school", required)
+            option(value='' selected=student.type_school=='UNDEFINED'?true:false) Ninguno
+            option(value='EXTRANJERO' selected=student.type_school=='EXTRANJERO'?true:false) Extranjero
+            option(value='FISCAL' selected=student.type_school=='FISCAL'?true:false) Fiscal
+            option(value='FISCOMISIONAL' selected=student.type_school=='FISCOMISIONAL'?true:false) Fiscomisional
+            option(value='PARTICULAR' selected=student.type_school=='PARTICULAR'?true:false) Particular
+            option(value='MUNICIPAL' selected=student.type_school=='MUNICIPAL'?true:false) Municipal
+          label(for='floatingSelect14') <strong>Tipo de colegio</strong>
+          +invalidMessage('Por favor seleccione su tipo de colegio.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect15.form-select(name="father_level", required)
+            option(value='' selected=student.father_level=='UNDEFINED'?true:false) Ninguno
+            option(value='CENTRO DE ALFABETIZACION' selected=student.father_level=='CENTRO DE ALFABETIZACION'?true:false) Centro de Alfabetización
+            option(value='JARDIN DE INFANTES' selected=student.father_level=='JARDIN DE INFANTES'?true:false) Jardín de Infantes
+            option(value='EDUCACION BASICA' selected=student.father_level=='EDUCACION BASICA'?true:false) Educación básica
+            option(value='EDUCACION SECUNDARIA' selected=student.father_level=='EDUCACION SECUNDARIA'?true:false) Educación Secundaria
+            option(value='EDUCACION MEDIA' selected=student.father_level=='EDUCACION MEDIA'?true:false) Educación Media
+            option(value='SUPERIOR NO UNIVERSITARIA' selected=student.father_level=='SUPERIOR NO UNIVERSITARIA'?true:false) Superior No Universitaria
+            option(value='SUPERIOR UNIVERSITARIA' selected=student.father_level=='SUPERIOR UNIVERSITARIA'?true:false) Superior Universitaria
+            option(value='POSGRADO' selected=student.father_level=='POSGRADO'?true:false) Posgrado
+          label(for='floatingSelect15') <strong>Nivel de formación del padre</strong>
+          +invalidMessage('Por favor seleccione el nivel de formación de su padre.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect16.form-select(name="mother_level", required)
+            option(value='' selected=student.mother_level=='UNDEFINED'?true:false) Ninguno
+            option(value='CENTRO DE ALFABETIZACION' selected=student.mother_level=='CENTRO DE ALFABETIZACION'?true:false) Centro de Alfabetización
+            option(value='JARDIN DE INFANTES' selected=student.mother_level=='JARDIN DE INFANTES'?true:false) Jardín de Infantes
+            option(value='EDUCACION BASICA' selected=student.mother_level=='EDUCACION BASICA'?true:false) Educación básica
+            option(value='EDUCACION SECUNDARIA' selected=student.mother_level=='EDUCACION SECUNDARIA'?true:false) Educación Secundaria
+            option(value='EDUCACION MEDIA' selected=student.mother_level=='EDUCACION MEDIA'?true:false) Educación Media
+            option(value='SUPERIOR NO UNIVERSITARIA' selected=student.mother_level=='SUPERIOR NO UNIVERSITARIA'?true:false) Superior No Universitaria
+            option(value='SUPERIOR UNIVERSITARIA' selected=student.mother_level=='SUPERIOR UNIVERSITARIA'?true:false) Superior Universitaria
+            option(value='POSGRADO' selected=student.mother_level=='POSGRADO'?true:false) Posgrado
+          label(for='floatingSelect16') <strong>Nivel de formación de la madre</strong>
+          +invalidMessage('Por favor seleccione el nivel de formación de su madre.')
+      .col-12.col-sm-12.col-lg-4.my-1.d-flex.align-items-center
+        .input-group
+          input#floatingInput2.form-control(type='text', name="household_income", title="Ingresos del hogar", pattern="^[0-9]+", placeholder='Ingresos del hogar (dólares)', value=student.household_income!='UNDEFINED'?student.household_income:'', required)
+          span.input-group-text $
+          +invalidMessage('Por favor introduzca los ingresos de su hogar. Verifique que sea un formato válido y evite espacios en blanco al final del número.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect17.form-select(name="ancestral_language", required)
+            option(value='NO APLICA' selected) Ninguno
+            each idioma in ['Cofan','Secoya','Shiwiar','Shuar','Waorani','Sapara','Andoa','Siona','Huancavilca','Manta','Palta','Chibuleo','Kanari','Karanki','Kayampi','Kisapincha','Kitu-Kara','Natabuela','Otavalo','Panzaleo','Puruha','Salasaca','Saraguro','Tomabela','Waranka','Quijos','Pasto']
+              option(value=`${idioma.toUpperCase()}` selected=student.ancestral_language==idioma.toUpperCase()?true:false)=idioma
+          label(for='floatingSelect17') <strong>¿Habla un idioma ancestral?</strong>
+          +invalidMessage('Por favor indique si habla un idioma ancestral.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          -let date = new Date()
+          -let max = `${date.getFullYear()-15}-${12}-${31}T23:59`
+          input.form-control.date-time#fecha_de_nacimiento(type="datetime-local", name="birth_date", title="Por favor seleccione su fecha de nacimiento.", max=max, value=`${student.birth_date}T23:59` required)
+          label.form-label(for="fecha_de_nacimiento") 
+            strong Fecha de nacimiento
+          +invalidMessage('Por favor seleccione su fecha de nacimiento.')
+      .col-12.col-sm-12.col-lg-4.my-1
+        .form-floating
+          select#floatingSelect18.form-select(name="migratory_category", value=student.migratory_category, required)
+            option(value='NO APLICA' selected) Ninguno
+            option(value='REFUGIADO' selected=student.migratory_category=='REFUGIADO'?true:false) Refugiado
+            option(value='RESIDENTE PERMANENTE' selected=student.migratory_category=='RESIDENTE PERMANENTE'?true:false) Residente permanente
+            option(value='RESIDENTE TRANSITORIO' selected=student.migratory_category=='RESIDENTE TRANSITORIO'?true:false) Residente transitorio o no residente
+          label(for='floatingSelect18') <strong>Categoria migratoria</strong>
+          +invalidMessage('Seleccione su estado de migrante en caso de serlo.')
+      .col-12.col-sm-12.col-lg-4.my-1
+      .col-12.text-start
+        div
+        label.m-1 
+          strong(style="color: #2E4053") Dirección de domicilio
+        div
+        label.m-1 
+          strong(style="color: #2E4053") Por favor de click en el mapa ubicando la dirección de su domicilio:
+        input#lng(type="hidden", name="lng", value=student.direction[0])
+        input#lat(type="hidden", name="lat", value=student.direction[1])
+        #mapid.my-1.rounded(style="height:256px")
+     button#btn_submit.form-control.btn.btn-primary(type="submit") Actualizar
+    #message_area.m-2 
+include ../partials/footer.pug
+script(src="/socket.io/socket.io.js")
+script(src="../js/actualizar_datos.js")

@@ -1,0 +1,92 @@
+include ../partials/head.pug
+body
+include ../partials/navegacion_admin.pug
+mixin alert(type, message)
+  .alert.alert-dismissible.fade.show(role="alert" class=type?'alert-success':'alert-danger')
+    =message
+    button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")  
+if (success)
+  +alert(true, success)
+h1.text-center.bg-light.p-2(style="color: #2E4053") Todas las actividades
+input#admin_name(type="hidden", name="admin_name", value=admin_name)
+input#admin_identifier(type="hidden", name="admin_identifier", value=admin_identifier)
+.container-fluid.mb-4
+  form#form_filter
+   .row.justify-content-evenly.rounded.align-items-center.py-1(style="background-color:rgb(40, 55, 71)")
+    .row.justify-content-evenly.m-1
+        .col-12.col-sm-12.col-md-4.col-lg-3
+          .form-floating
+              select.form-select.m-1(title='Filtrar por tipo.' name="type_filter")
+                option(value="") Ninguno
+                option(value="ADMIN INICIA SESION") ADMIN INICIA SESION
+                option(value="ADMIN PROCESO") ADMIN PROCESO
+                option(value="ADMIN TITULACION") ADMIN TITULACIÓN
+                option(value="ADMIN CALIFICACION") ADMIN CALIFICACIÓN
+                option(value="ADMIN CALIFICACION TITULACION") ADMIN CALIFICACIÓN TITULACIÓN
+                option(value="ADMIN ACTUALIZACION") ADMIN ACTUALIZACIÓN
+                option(value="ADMIN ELIMINACION ESTUDIANTE") ADMIN ELIMINACIÓN ESTUDIANTE
+                option(value="ADMIN ELIMINACION MATRICULA") ADMIN ELIMINACIÓN MATRICULA
+                option(value="ADMIN ELIMINACION MATRICULA TITULACION") ADMIN ELIMINACIÓN MATRICULA TITULACIÓN
+                option(value="ADMIN MATRICULA ESPECIAL") ADMIN MATRICULA ESPECIAL
+                option(value='ESTUDIANTE REGISTRO') ESTUDIANTE REGISTRO 
+                option(value='ESTUDIANTE ACTUALIZACION') ESTUDIANTE ACTUALIZACIÓN
+                option(value='ESTUDIANTE TITULACION') ESTUDIANTE TITULACIÓN
+                option(value='ESTUDIANTE DOCUMENTACION') ESTUDIANTE DOCUMENTACIÓN
+                option(value='ESTUDIANTE MATRICULA') ESTUDIANTE MATRICULA 
+                option(value='CALIFICADOR INICIA SESION') CALIFICADOR INICIA SESION
+                option(value='CALIFICADOR REVISION') CALIFICADOR REVISIÓN MATRÍCULA
+                option(value='CALIFICADOR REVISION TITULACION') CALIFICADOR REVISIÓN MATRÍCULA
+              label Filtrar por tipo
+        .col-12.col-sm-12.col-md-4.col-lg-3
+          .form-floating
+              input.form-control.m-1(type="date", name="date_filter", placeholder="Filtrar por fecha")
+              label(for="date_filter") Filtrar por fecha
+        .col-12.col-sm-12.col-md-4.col-lg-3
+          .form-floating
+              select.form-select.m-1(title='Filtrar por responsble.' name="autor_filter")
+                option(value="") Ninguno
+                option(value="ESTUDIANTE") ESTUDIANTE
+                option(value='CALIFICADOR') CALIFICADOR
+                option(value='ADMIN') ADMIN
+              label Filtrar por responsable
+    .row.justify-content-evenly.m-1
+      .col-12.col-sm-12.col-md-4.col-lg-3
+      .col-12.col-sm-12.col-md-4.col-lg-3
+      .col-12.col-sm-12.col-md-4.col-lg-3
+          button.form-control.btn.btn-primary.m-1(type="submit")
+            span.text-center Filtrar
+.container-fluid.my-2
+ .row.justify-content-between
+  .col-12.overflow-auto
+    #message_area
+      - if(allActivities.length <= 0)
+        +alert(false, 'No hay actividades para mostrar')
+    table.table.table-striped.table-hover
+      caption 
+        - if (allActivities.length > 0)
+          | Todas las actividades
+        - else
+          | No hay actividades para mostrar. 
+      thead.text-white(style="background-color:rgb(40, 55, 71)")
+      tr
+        th(scope='col').text-center Tipo
+        th(scope='col').text-center Fecha
+        th(scope='col').text-center Responsable
+        th(scope='col').text-center Información
+      tbody#activities_container
+        -if (allActivities.length > 0)
+          each activitie in allActivities
+            tr.container(id=`${activitie._id}CONTAINER` data-type=activitie.action data-autor=activitie.autor[0] data-date=/[0-9]{4}-[0-9]{2}-[0-9]{2}/.exec(activitie.createdAt.toISOString())[0])
+              td(style="vertical-align:middle").action=activitie.action
+              td(style="vertical-align:middle").date=/[0-9]{4}-[0-9]{2}-[0-9]{2}/.exec(activitie.createdAt.toISOString())
+              td(style="vertical-align:middle").autor=activitie.autor.join(' ')
+              td(style="vertical-align:middle").career=activitie.information.join(' ')
+  .col-auto
+    - if (less == true)
+      button.btn.btn-primary#less(data-current=current) Ver anteriores
+  .col-auto
+    - if (more == true)
+      button.btn.btn-primary#more(data-current=current) Ver siguientes
+include ../partials/footer.pug
+script(src="/socket.io/socket.io.js")
+script(src="/js/admin_activities.js")

@@ -1,0 +1,87 @@
+include ../partials/head.pug
+body
+ include ../partials/navegacion_estudiantes.pug
+ mixin alert(type, msg, button, name)
+        .alert.alert-dismissible.fade.show(role="alert" class=type?'alert-success':'alert-danger')
+          =msg
+          if (button)
+            .fa.fa-download(data-name=name class='dwnl_button' title='Descargar archivo')
+            button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+ mixin invalidMessage(message)
+    .invalid-feedback
+          =message
+ - let someFile = uploadedDocs.length > 0
+ - function isThisFile(name){return uploadedDocs.some( v => v == name)}
+ if (success)
+  +alert(true, success, false)
+ .container-fluid.mt-3.text-center
+  h2(style="color: #2E4053") Sube tu documentación
+  .alert.alert-warning.alert-dismissible.fade.show(role="alert")
+    p Recuerde revisar su información siempre que vaya a iniciar un proceso de matriculación, así nos ayuda a que los datos de su matricula sean correctamente almacenados, gracias!
+    button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+  .row.justify-content-center.mt-3.mb-4
+   .col-12.col-sm-10
+    form.needs-validation#form_upload_docs(novalidate)
+        input#no_identifier(type="hidden", name="no_identifier", value=identifier)
+        .row.row-cols-3.justify-content-start
+          .col-12.col-sm-12.col-md-6.col-lg-4.my-1.text-start#ci_pdf_container
+            label.m-1.form-label(for="formFile") 
+              strong(style="color: #2E4053") Documento de identificación (PDF)
+            input.form-control#formFile(name="ci_pdf", type="file", required=someFile?!isThisFile('CI_PDF.pdf'):true)
+            +invalidMessage('Por favor cargue el documento indicado.')
+            .mt-1.mb-0#err_pdf_area_1
+            -if(someFile)
+             -if(isThisFile('CI_PDF.pdf'))
+              +alert(true, 'Archivo subido, descargar: ', true,'CI_PDF')
+          .col-12.col-sm-12.col-md-6.col-lg-4.my-1.text-start#foto_pdf_container
+            label.m-1.form-label(for="formFile2") 
+              strong(style="color: #2E4053") Cargue su foto (PDF)
+            input.form-control#formFile2(name="foto_pdf", type="file", required=someFile?!isThisFile('FOTO_PDF.pdf'):true)
+            +invalidMessage('Por favor cargue el documento indicado.')
+            .mt-1.mb-0#err_pdf_area_2
+            -if(someFile)
+             -if(isThisFile('FOTO_PDF.pdf'))
+              +alert(true, 'Archivo subido, descargar: ', true,'FOTO_PDF')
+          .col-12.col-sm-12.col-md-6.col-lg-4.my-1.text-start#sangre_pdf_container
+            label.m-1.form-label(for="formFile3") 
+              strong(style="color: #2E4053") Documento de tipo de sangre (PDF)
+            input.form-control#formFile3(name="sangre_pdf", type="file", required=someFile?!isThisFile('SANGRE_PDF.pdf'):true)
+            +invalidMessage('Por favor cargue el documento indicado.')
+            .mt-1.mb-0#err_pdf_area_3
+            -if(someFile)
+             -if(isThisFile('SANGRE_PDF.pdf'))
+              +alert(true, 'Archivo subido, descargar: ', true,'SANGRE_PDF')
+          .col-12.col-sm-12.col-md-6.col-lg-4.my-1.text-start#titulo_pdf_container
+            label.m-1.form-label(for="formFile4") 
+              strong(style="color: #2E4053") Copia de titulo de bachiller a color (PDF)
+            input.form-control#formFile4(name="titulo_pdf", type="file", required=someFile?!isThisFile('TITULO_PDF.pdf'):true)
+            +invalidMessage('Por favor cargue el documento indicado.')
+            .mt-1.mb-0#err_pdf_area_4
+            -if(someFile)
+             -if(isThisFile('TITULO_PDF.pdf'))
+              +alert(true, 'Archivo subido, descargar: ', true,'TITULO_PDF')
+          .col-12.col-sm-12.col-md-6.col-lg-4.my-1.text-start#cupo_pdf_container
+            label.m-1.form-label(for="formFile5") 
+              strong(style="color: #2E4053") Comprobante de cupo asignado (PDF)
+            input.form-control#formFile5(name="cupo_pdf", type="file", required=someFile?!isThisFile('CUPO_PDF.pdf'):true)
+            +invalidMessage('Por favor cargue el documento indicado.')
+            .mt-1.mb-0#err_pdf_area_5
+            -if(someFile)
+             -if(isThisFile('CUPO_PDF.pdf'))
+              +alert(true, 'Archivo subido, descargar: ', true,'CUPO_PDF')
+          .col-12.col-sm-12.col-md-6.col-lg-4.my-1.text-start#vacunas_pdf_container
+            label.m-1.form-label(for="formFile") 
+              strong(style="color: #2E4053") Certificado de vacunas (PDF)
+            input.form-control#formFile(name="vacunas_pdf", type="file", required=someFile?!isThisFile('VACUNAS_PDF.pdf'):true)
+            +invalidMessage('Por favor cargue el documento indicado.')
+            .mt-1.mb-0#err_pdf_area_6
+            -if(someFile)
+             -if(isThisFile('VACUNAS_PDF.pdf'))
+              +alert(true, 'Archivo subido, descargar: ', true,'VACUNAS_PDF')
+        button#btn_submit.form-control.btn.btn-primary(type="submit") Enviar
+  #message_area
+    - if (message_error)
+       +alert(false, message_error, false)
+include ../partials/footer.pug
+script(src="/socket.io/socket.io.js")
+script(src="../js/estudiantes_subir_documentacion.js")

@@ -1,0 +1,94 @@
+include ../partials/head.pug
+body
+ include ../partials/navegacion_admin.pug
+ mixin invalidMessage(message)
+    .invalid-feedback
+          =message
+ mixin alert(type, message)
+    .alert.alert-dismissible.fade.show(role="alert" class=type?'alert-success':'alert-danger')
+      =message
+      button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+ if (success)
+  +alert(true, success)
+ h1.text-center.bg-light.p-2(style="color: #2E4053") Calificar matrículas en titulación
+ input#admin_name(type="hidden", name="admin_name", value=admin_name)
+ input#admin_identifier(type="hidden", name="admin_identifier", value=admin_identifier)
+ input#enrollments_ids(type="hidden", value=JSON.stringify(enrollmentsToQualify.map(v => v._id)))
+ .container-fluid.mb-4
+  form#form_filter
+   .row.justify-content-end.rounded.align-items-center.py-1(style="background-color:rgb(40, 55, 71)")
+    .col-12.col-lg-3.my-1
+     .form-floating
+        select.form-select(name="type_filter" title='Filtrar por tipo')
+          option(value="") Ninguno
+          option(value="0") Primer periodo destinado a la titulación
+          option(value='1') Primera prorroga
+          option(value='2') Segunda prorroga
+        label Filtrar por tipo
+    .col-12.col-lg-3.my-1
+     .form-floating
+        select.form-select(name="career_filter" title='Filtrar por carrera')
+          option(value="") Ninguno
+          option(value="AUTOMATIZACION E INSTRUMENTACION") Automatizacion e instrumentación
+          option(value='MONITOREO AMBIENTAL') Monitoreo Ambiental
+          option(value='DESARROLLO INFANTIL INTEGRAL') Desarrollo Infantil Integral
+          option(value='MECATRONICA') Mecatrónica
+          option(value='MECANICA INDUSTRIAL') Mecánica Industrial
+          option(value='SEGURIDAD Y PREVENCION DE RIESGOS LABORALES') Seguridad y Prevencion de Riesgos Laborales
+          option(value='SOLDADURA') Soldadura
+        label Filtrar por carrera
+    .col-12.col-lg-3.my-1
+     .form-floating
+        input.form-control(title='Filtrar por numero de identificación' type='text' placeholder='Filtrar por numero de identificación', name="ci_filter")
+        label Filtrar por número de identificación
+    .col-12.col-sm-12.col-md-2.col-lg-1.my-1
+        button.form-control.btn.btn-primary(type="submit") Filtrar
+ .container-lg.overflow-auto
+  table.table.table-striped.table-hover 
+   caption Matriculas por calificar
+   thead.text-white(style="background-color:rgb(40, 55, 71)")
+    tr
+      th(scope='col').text-center Identificación
+      th(scope='col').text-center Nombres
+      th(scope='col').text-center Carrera
+      th(scope='col').text-center Tipo
+      th(scope='col').text-center Periodo
+      th(scope='col').text-center Acciones
+   tbody#e_c
+      - if (enrollmentsToQualify.length > 0)
+        each enrollment in enrollmentsToQualify.reverse()
+          - let {_id,student} = enrollment
+          - let {period,year,career,type} = enrollment.enrollment_features
+          tr.container(id=`${enrollment._id}CONTAINER` data-type=type[0], data-career=career data-no_identifier=student[0])
+            td(style="vertical-align:middle").no_identifier=student[0]
+            td(style="vertical-align:middle").name=student.slice(1).join(' ')
+            td(style="vertical-align:middle").career=career
+            td(style="vertical-align:middle").career=type[1]
+            td(style="vertical-align:middle").period=`${period} ${year}`
+            td(style="vertical-align:middle").text-center
+              button.btn.btn-primary.watch(style="visibility:hidden" id=_id data-bs-target=`#staticBackdrop${_id}`)
+                | Calificar
+ - if (enrollmentsToQualify.length > 0)
+        each enrollment in enrollmentsToQualify
+          - let {_id,student,last_modify} = enrollment
+          .modal.fade.modal_container(aria-modal='true' data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" id=`staticBackdrop${_id}`)
+            .modal-dialog.modal-dialog-scrollable.modal-xl
+             .modal-content
+              .modal-header 
+                  .row
+                    .col-12
+                      h5.modal-title Datos de la matrícula
+                    .col-12
+                      h6.last_modify.modal-title=`Revisado por: ${enrollment.last_modify}`
+                  button.btn-close.close_button(type="button" data-bs-dismiss="modal" aria-label="Close")
+              .modal-body
+                  .container-fluid
+                    form._form.needs-validation(novalidate id=`FORM${_id}` data-student=student[0])
+                        .col-auto
+                          button.btn.btn-success(type="submit") Finalizar
+ #message_area
+ - if (enrollmentsToQualify.length <= 0)
+    +alert(true, 'No hay matriculas pendientes a ser calificadas en este momento.')
+ include ../partials/footer.pug
+ script(src="/socket.io/socket.io.js")
+ script(src="/js/admin_titulacion.js")

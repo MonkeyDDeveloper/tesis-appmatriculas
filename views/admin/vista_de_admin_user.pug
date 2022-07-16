@@ -1,0 +1,45 @@
+include ../partials/head.pug
+body
+ .container-fluid.p-0
+  nav.navbar.navbar-light.bg-light
+      .row.justify-content-between(style="width:100%")
+          .col-auto
+            .navbar-brand
+              img.mr-2(src="../images/icono_ispedib.ico" title='ISPIB LOGO')
+              |       Matriculaciones ISPIB MBR
+          .col-auto
+            a(href="/logout")  
+              button.btn.btn-light.border(type="button", data-bs-toggle="tooltip", data-bs-placement="left",  title="Cerrar sesión", style="background-color: #FFC300;")
+                i.fa.fa-sign-out.fa-2x(aria-hidden="true", style="color: #2E4053")
+ .container-fluid.text-center.my-4
+    h1(style="color: #2E4053") ¿Quién está ingresando?
+ .container-md.my-4
+  form#form_user_admin
+    .row.justify-content-center
+        .col-12.col-sm-5
+            .form-floating.my-1
+                input#floatingInput3.form-control(type="text", name="primer_nombre", placeholder="Primer nombre", title="Este campo solo acepta letras y espacios en blancos", pattern="[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s+)?", required)
+                label.text-muted(for="floatingInput3") Primer nombre
+            .form-floating.my-1
+                input#floatingInput2.form-control(type="text", name="primer_apellido", placeholder="Primer apellido", title="Este campo solo acepta letras y espacios en blancos", pattern="[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s+)?", required)
+                label.text-muted(for="floatingInput2") Primer apellido
+            .form-floating.my-1
+                input#floatingInput1.form-control(type="text" placeholder="Escriba su numero cédula." name="admin_identifier" title="Este campo solo acepta 10 números sin espacios en blanco." pattern="^[0-9]{10}", required)
+                label.text-muted(for='floatingInput1') Número de cédula
+            .form-floating
+              select#career.form-select(name="career" title='Carrera' required)
+                option(value="") Ninguno
+                option(value="AUTOMATIZACION E INSTRUMENTACION") Automatizacion e instrumentación
+                option(value='MONITOREO AMBIENTAL') Monitoreo Ambiental
+                option(value='DESARROLLO INFANTIL INTEGRAL') Desarrollo Infantil Integral
+                option(value='MECATRONICA') Mecatrónica
+                option(value='MECANICA INDUSTRIAL') Mecánica Industrial
+                option(value='SEGURIDAD Y PREVENCION DE RIESGOS LABORALES') Seguridad y Prevencion de Riesgos Laborales
+                option(value='SOLDADURA') Soldadura
+              label Carrera
+            .form-group.my-1
+                button#button_submit.form-control.bg-primary(type="submit") 
+                  h6.text-white Ingresar
+  #message_area
+script(src="/js/admin_user.js") 
+include ../partials/footer.pug

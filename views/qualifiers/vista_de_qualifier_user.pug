@@ -1,0 +1,40 @@
+include ../partials/head.pug
+body
+ mixin invalidMessage(message)
+      .invalid-feedback
+          =message
+ .container-fluid.p-0
+  nav.navbar.navbar-light.bg-light
+      .row.justify-content-between(style="width:100%")
+          .col-auto
+            .navbar-brand
+              img.mr-2(title='ISPIB LOGO' src="../images/icono_ispedib.ico")
+              |       Matriculaciones ISPIB MBR
+          .col-auto
+            a(href="/logout")  
+              button.btn.btn-light.border(type="button", data-bs-toggle="tooltip", data-bs-placement="left",  title="Cerrar sesión", style="background-color: #FFC300;")
+                i.fa.fa-sign-out.fa-2x(aria-hidden="true", style="color: #2E4053")
+ .container-fluid.text-center.my-4
+    h1(style="color: #2E4053") ¿Quién está ingresando?
+ .container-md.my-4
+  form.needs-validation(novalidate)#form_user_admin
+    .row.justify-content-center
+        .col-12.col-sm-5
+            .form-floating.my-1
+                input.form-control(type="text", name="primer_nombre", placeholder="Primer nombre", pattern="[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s+)?", required)
+                label.text-muted(for="floatingInput3") Primer nombre
+                +invalidMessage('Ingrese un nombre valido.')
+            .form-floating.my-1
+                input.form-control(type="text", name="primer_apellido", placeholder="Primer apellido", title="Este campo solo acepta letras y espacios en blancos", pattern="[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s+)?", required)
+                label.text-muted(for="floatingInput2") Primer apellido
+                +invalidMessage('Ingrese un apellido valido.')
+            .form-floating.my-1
+                input#floatingInput1.form-control(type="text" placeholder="Escriba su numero cédula." name="admin_identifier", pattern="^[0-9]{10}", required)
+                label.text-muted(for='floatingInput1') Número de cédula
+                +invalidMessage('Ingrese un número de identificación valido.')
+            .form-group.my-1
+                button#button_submit.form-control.bg-primary(type="submit") 
+                  h6.text-white Ingresar
+  #message_area
+script(src="/js/qualifier_user.js") 
+include ../partials/footer.pug

@@ -1,0 +1,147 @@
+include ../partials/head.pug
+body
+mixin invalidMessage(message)
+      .invalid-feedback
+          =message
+include ../partials/navegacion_inicio.pug
+.container-fluid.mt-3.mb-5
+  .alert.alert-warning.alert-dismissible.fade.show#database_alert(role='alert' style="display:none")
+   button.btn-close(type='button' aria-label='Close')
+  .row.justify-content-center
+    .col-12.col-md-9.col-lg-8.align-self-center
+      .card
+        .card-header.bg-light.text-center 
+          h4(style="color: #2E4053") Completa el formulario para registrarte
+        form.needs-validation(novalidate autocomplete="off")#form-register
+          .card-body
+            .card-subtitle.mt-2.m-1.text-muted.border-bottom <h6> Datos personales </h6>
+            .row.justify-content-between
+              .col-12.col-lg-6.mt-2
+                .form-floating
+                  input.form-control(id='first_element' type="text", name="first_name", placeholder="Primer nombre", title="Primer nombre", pattern="[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s+)?", required)
+                  label.text-muted(for="first_name") 
+                    h6 Primer nombre
+                  +invalidMessage('Introduzca su primer nombre. Por favor evite los espacios en blanco al final del texto.')
+              .col-12.col-lg-6.mt-2
+                .form-floating
+                  input.form-control(type="text", name="second_name", placeholder="Segundo nombre", title="Segundo nombre", pattern="[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s+)?")
+                  label.text-muted(for="second_name") 
+                    h6 Segundo nombre
+                  +invalidMessage('Introduzca su segundo nombre. Por favor evite los espacios en blanco al final del texto.')
+              .col-12.col-lg-6.mt-2
+                .form-floating
+                  input.form-control(type="text", name="first_lastname", placeholder="Primer apellido", title="Primer apellido", pattern="[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s+)?", required)
+                  label.text-muted(for="first_lastname") 
+                    h6 Primer apellido
+                  +invalidMessage('Introduzca su primer apellido. Por favor evite los espacios en blanco al final del texto.')
+              .col-12.col-lg-6.mt-2
+                .form-floating
+                  input.form-control(type="text", name="second_lastname", placeholder="Segundo apellido", title="Segundo apellido", pattern="[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s+)?")
+                  label.text-muted(for="second_lastname") 
+                    h6 Segundo apellido
+                  +invalidMessage('Introduzca su segundo apellido. Por favor evite los espacios en blanco al final del texto.')
+              .col-12.col-lg-6.mt-2
+                .form-floating
+                  select.form-select(name="sex", required)
+                    option(value='' selected) Ninguno
+                    option(value='true') Hombre
+                    option(value='false') Mujer
+                  label(for='sex')
+                    strong Séxo
+                  +invalidMessage('Por favor seleccione su sexo.')
+              .col-12.col-lg-6.mt-2
+                .form-floating
+                  -let date = new Date()
+                  -let max = `${date.getFullYear()-15}-${12}-${31}T23:59`
+                  input.form-control.date-time#fecha_de_nacimiento(type="datetime-local", name="birth_date", title="Por favor seleccione su fecha de nacimiento.", max=max, required)
+                  label.form-label(for="fecha_de_nacimiento") 
+                    strong Fecha de nacimiento
+                  +invalidMessage('Por favor seleccione su fecha de nacimiento.')
+            .card-subtitle.mt-2.m-1.text-muted.border-bottom <h6> Datos de contacto </h6>
+            .row.align-items-center
+             .col-12.col-lg-6.mt-2
+              .form-floating
+                select.form-select#tipo_de_identificacion(name="identifier", required)
+                  option(value="CI") Cedula de ciudadanía
+                  option(value="PASAPORTE") Pasaporte
+                label.form-label(for='identifier')
+                    strong Tipo de identificación
+                +invalidMessage('Por favor seleccione su tipo de identificación.')
+             .col-12.col-lg-6.mt-2
+              .form-floating
+                input.form-control#numero_de_identificacion(type="text" placeholder="Número de identificación" title="Número de identificación" pattern="^[0-9]{10}", required)
+                label.text-muted(for="no_identifier") 
+                  h6 Escriba su numero de identificación
+                +invalidMessage('Por favor introduzca su número de identificación. Por favor verifique que sea un formato válido y evite espacios en blancos al final del número.')                  
+             .col-12.col-lg-6.mt-2
+              .form-floating
+                input.form-control#rep_numero_de_identificacion(type="text" placeholder="Repita se su numero de identificación" name="no_identifier" title="Repita su número de identificación", required)
+                label.text-muted(for="no_identifier") 
+                  h6 Repita su numero de identificación
+                +invalidMessage('Los dos números de identificación deben coincidir.')                  
+             .col-12.col-lg-6.mt-2
+              .form-floating
+                input.form-control#correo_electronico(type="email" placeholder="Correo electrónico", title="Correo electrónico" pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$", required)
+                label.text-muted(for="email") 
+                  h6 Ingrese su correo electrónico
+                +invalidMessage('Por favor introduzca su email. Por favor verifique que sea un formato válido y que no contenga espacios al final del correo.')                  
+             .col-12.col-lg-6.mt-2
+                .form-floating
+                  input.form-control#re_correo_electronico(type="email" placeholder="Repita su email" name="email" title="Repita su email", required)
+                  label.text-muted(for="email") 
+                    h6 Escriba su correo nuevamente
+                  +invalidMessage('Los correos deben coincidir.')                    
+             .col-12.col-lg-6.mt-2
+                .form-floating
+                  input.form-control#numero_celular(type="text" placeholder="Número celular" name="no_celular" title="Número celular." pattern="^[0-9]{10}", required)
+                  label.text-muted(for="no_celular") 
+                    h6 Numero celular
+                  +invalidMessage('Ingrese su número de celular. Por favor verifique que sea un formato válido y evite espacios en blanco al final del número.')                    
+             .col-12.col-lg-6.mt-2
+                .form-floating
+                  input.form-control#numero_telefono(type="text" placeholder="Número de teléfono fijo" name="no_telf" title="Número de teléfono fijo" pattern="^([0-9]{6}|[0-9]{9})")
+                  label.text-muted(for="no_telf") 
+                    h6 Numero de telefono fijo
+                  +invalidMessage('Ingrese su número de telefono fijo. Por favor verifique que sea un formato válido y evite espacios al final del número.')                    
+             .col-12.col-lg-6.mt-2
+                .row.row-cols-1.align-items-center(style="height:100%")
+                  .col
+                    .input-group
+                      input.form-control#password(type="password" autocomplete="new-password" placeholder="Escriba su contraseña" title="Ingrese su contraseña" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#.@$!%*?&])([A-Za-z\\d$#.@$!%*?&]|[^ ]){8,15}", required)
+                      span.input-group-text
+                        i#see_password(class="fa fa-eye" aria-hidden="true")
+                      +invalidMessage('La contraseña debe medir entre 8 y 15 carácteres, y tener mayúsculas, minúsculas, números y caracteres especiales como: .#@$!%*?&.')
+             .col-12.col-lg-6.mt-2
+                .row.row-cols-1.align-items-center(style="height:100%")
+                    .input-group
+                      input.form-control#re-password(type="password" autocomplete="new-password" placeholder="Repita su contraseña" name="password" title="Repita su contraseña.", required)
+                      span.input-group-text
+                        i#see_repassword(class="fa fa-eye" aria-hidden="true")
+                      +invalidMessage('Las contraseñas deben coincidir.')                      
+             .col-12.col-lg-6.mt-2
+                .form-floating
+                    select.form-select(name="career", required)
+                      option(value='') Ninguno
+                      option(value='AUTOMATIZACION E INSTRUMENTACION') Tecnología Superior en Automatización e Instrumentación
+                      option(value='MONITOREO AMBIENTAL') Tecnología Superior en Monitoreo Ambiental
+                      option(value='DESARROLLO INFANTIL INTEGRAL') Tecnología Superior en Desarrollo Infantil Integral
+                      option(value='MECATRONICA') Tecnología Superior en Mecatrónica
+                      option(value='MECANICA INDUSTRIAL') Tecnología Superior en Mecánica Industrial
+                      option(value='SEGURIDAD Y PREVENCION DE RIESGOS LABORALES') Tecnología Superior en Seguridad Y Prevención de Riesgos Laborales
+                      option(value='SOLDADURA') Tecnología Superior en Soldadura
+                    label(for='carrer') 
+                      strong Carrera a cursar
+                    +invalidMessage('Seleccione la carrera que va a cursar')                      
+             .col-12.col-lg-6
+              .form-group.m-1.my-2
+               .form-check
+                  input.form-check-input#flexCheckChecked(type="checkbox", name="confidentiality", value="1", title="Por favor acepta esta casilla para poder continuar", checked, required)
+                  label.form-check-label(for="flexCheckChecked") Acuerdo de confidencialidad
+                  +invalidMessage('Acepte el acuerdo de confidencialidad.')                  
+             .col-12 
+              .form-group.m-1.mt-2.text-center#submit_area               
+                button#btn_submit.form-control.btn.btn-primary(type="submit") Registrarse
+      #message_area
+include ../partials/footer.pug
+script(src="/socket.io/socket.io.js")
+script(src="js/registrarse.js") 
