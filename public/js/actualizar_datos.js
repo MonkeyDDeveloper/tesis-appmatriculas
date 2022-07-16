@@ -8,7 +8,7 @@
         }),
         form = document.getElementById('form_actualizar'),
         mapBoxToken = {
-            token: 'pk.eyJ1IjoibW9ua2V5ZGZyYXkiLCJhIjoiY2tzbTRidGN3MzNreDJ3cm9ucTRuaWF4ZiJ9.ztttsw5uVLFU4wO0WXtyCw'
+            token: 'hidden_token'
         },
         student_lng = document.getElementById('lng'),
         student_lat = document.getElementById('lat'),
